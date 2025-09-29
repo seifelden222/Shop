@@ -46,4 +46,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get all carts for the user.
+     */
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    /**
+     * Get cart items count (not in order)
+     */
+    public function getCartCountAttribute()
+    {
+        return $this->carts()
+            ->whereNull('order_id')
+            ->sum('quantity') ?? 0;
+    }
 }

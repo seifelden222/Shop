@@ -1,5 +1,15 @@
 @extends('layouts.app')
 @section('content')
+
+@if(session('success'))
+<div class="container mt-3">
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+</div>
+@endif
+
 <section class="hero">
       <div class="container hero-content text-white">
         <div class="row">
@@ -12,6 +22,7 @@
             </p>
 
             <form class="mb-4" role="search" aria-label="Site search">
+              @csrf
               <div class="input-group input-group-lg shadow-sm">
                 <input
                   type="search"
@@ -170,9 +181,14 @@
                 <div class="mt-auto d-flex justify-content-between align-items-center">
                   <div class="fw-bold text-success fs-5">${{ number_format($product->price, 2) }}</div>
                   <div>
-                    <button class="btn btn-success btn-sm">
-                      <i class="bi bi-cart-plus"></i> Add to Cart
-                    </button>
+                    <form class="d-inline" method="POST" action="{{ route('test.quick-add') }}">
+                      @csrf
+                      <input type="hidden" name="quantity" value="1">
+                      <input type="hidden" name="product_id" value="{{ $product->id }}">  
+                      <button type="submit" class="btn btn-success btn-sm">
+                        <i class="bi bi-cart-plus"></i> Add to Cart
+                      </button>
+                    </form>
                     <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info btn-sm ms-1">
                       <i class="bi bi-eye"></i> View
                     </a>

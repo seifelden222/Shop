@@ -27,18 +27,47 @@
             ><i class="bi bi-search fs-5"></i
             ><span class="visually-hidden">Search</span></a
           >
-          <a class="position-relative text-dark" href="#" title="Cart">
+          <a class="position-relative text-dark" href="{{ route('carts.index') }}" title="Cart">
             <i class="bi bi-cart4 fs-5"></i>
-            <span
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              >3</span
-            >
+            @auth
+              @if(auth()->user()->cart_count > 0)
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{ auth()->user()->cart_count }}
+                </span>
+              @endif
+            @endauth
             <span class="visually-hidden">Cart</span>
           </a>
-          <a class="text-dark" href="#" title="Account"
-            ><i class="bi bi-person-circle fs-5"></i
-            ><span class="visually-hidden">Account</span></a
-          >
+          @auth
+            <div class="dropdown">
+              <a class="text-dark dropdown-toggle" href="#" role="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Account">
+                <i class="bi bi-person-circle fs-5"></i>
+                <span class="visually-hidden">Account</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                @if(Route::has('dashboard'))
+                  <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
+                @endif
+                <li><a class="dropdown-item" href="{{ route('test.index') }}">My Cart</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item">Logout</button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          @else
+            <a class="text-dark me-2" href="{{ route('login') }}" title="Login">
+              <i class="bi bi-box-arrow-in-right fs-5"></i>
+              <span class="visually-hidden">Login</span>
+            </a>
+            <a class="text-dark" href="{{ route('register') }}" title="Register">
+              <i class="bi bi-person-plus fs-5"></i>
+              <span class="visually-hidden">Register</span>
+            </a>
+          @endauth
         </div>
       </div>
     </nav>

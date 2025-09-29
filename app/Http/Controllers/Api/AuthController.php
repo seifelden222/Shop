@@ -16,25 +16,54 @@ class AuthController extends Controller
     {
         try {
             $validated = $request->validated();
-            if ($validated['password']) Hash::make($validated['password']);
+            $validated['password'] = Hash::make($validated['password']);
             $user = User::create($validated);
-            return response()->json(['message' => 'User registered successfully.'], 201);
+            
+            return response()->json([
+                'message' => 'User registered successfully.',
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email
+                ]
+            ], 201);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occurred during registration.'], 500);
+            return response()->json([
+                'message' => 'An error occurred during registration.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
     public function Login(LoginRequest $request)
     {
         try {
             $validated = $request->validated();
-            if (!Auth::attempt($validated->only('email', 'password'))) {
+            $credentials = [
+                'email' => $validated['email'],
+                'password' => $validated['password']
+            ];
+            
+            if (!Auth::attempt($credentials)) {
                 return response()->json(['message' => 'Invalid login details'], 401);
             }
-            $user = User::where('email', $validated['email'])->firstOrFail();
+            
+            $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
-            return response()->json(['access_token' => $token, 'token_type' => 'Bearer'], 200);
+            
+            return response()->json([
+                'access_token' => $token, 
+                'token_type' => 'Bearer',
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email
+                ]
+            ], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occurred during login.'], 500);
+            return response()->json([
+                'message' => 'An error occurred during login.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
     public function Logout(Request $request)
