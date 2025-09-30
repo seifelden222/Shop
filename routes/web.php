@@ -37,5 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::delete('/cart/{cartId}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::put('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
-    Route::post('/cart/quick-add', [CartController::class, 'quickAdd'])->name('cart.quick-add');
+    Route::post('/cart/quick-add', [CartController::class, 'quickAdd'])->name('cart.quick-add'); 
+    
+    // Brand total products route
 });

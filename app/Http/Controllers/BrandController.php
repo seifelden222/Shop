@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BrandRequest;
 use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -115,5 +116,26 @@ class BrandController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while deleting the brands.');
         }
+    }
+
+    public function TotalProducts($brandId = null)
+    {
+        $brand = Brand::where('is_active', true)->with(['products' => function ($query) {
+            $query->where('status', 'published');
+        }])->get();
+
+        $brandData = [];
+        foreach ($brand as $item) {
+            $totalProducts = $item->products->count();
+            $totalPrice = $item->products->sum('price');
+            $averagePrice = $totalProducts > 0 ? $totalPrice / $totalProducts : 0;
+            $brandData[] = [
+                'brand_name' => $item->name,
+                'total_products' => $totalProducts,
+                'total_price' => $totalPrice,
+                'average_price' => round($averagePrice, 2),
+            ];
+        }
+        return response()->json($brandData);
     }
 }
