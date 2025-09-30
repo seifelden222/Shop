@@ -1,0 +1,613 @@
+{
+    "info": {
+        "name": "Central Payment API",
+        "description": "API Documentation",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "auth",
+            "item": [
+                {
+                    "name": "login",
+                    "item": [
+                        {
+                            "name": "[POST] api/auth/login",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/auth/login",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "auth",
+                                        "login"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "logout",
+                    "item": [
+                        {
+                            "name": "[POST] api/auth/logout",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/auth/logout",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "auth",
+                                        "logout"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "me",
+                    "item": [
+                        {
+                            "name": "[GET] api/auth/me",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/auth/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "auth",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "v1",
+            "item": [
+                {
+                    "name": "admin",
+                    "item": [
+                        {
+                            "name": "applications",
+                            "item": [
+                                {
+                                    "name": "[GET] api/v1/admin/applications",
+                                    "request": {
+                                        "method": "GET",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/v1/admin/applications",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "v1",
+                                                "admin",
+                                                "applications"
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "[POST] api/v1/admin/applications",
+                                    "request": {
+                                        "method": "POST",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/v1/admin/applications",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "v1",
+                                                "admin",
+                                                "applications"
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "[GET] api/v1/admin/applications/{application}",
+                                    "request": {
+                                        "method": "GET",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/v1/admin/applications/{application}",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "v1",
+                                                "admin",
+                                                "applications",
+                                                "{application}"
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "[PUT] api/v1/admin/applications/{application}",
+                                    "request": {
+                                        "method": "PUT",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/v1/admin/applications/{application}",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "v1",
+                                                "admin",
+                                                "applications",
+                                                "{application}"
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "[DELETE] api/v1/admin/applications/{application}",
+                                    "request": {
+                                        "method": "DELETE",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/v1/admin/applications/{application}",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "v1",
+                                                "admin",
+                                                "applications",
+                                                "{application}"
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "",
+                                    "item": [
+                                        {
+                                            "name": "regenerate-credentials",
+                                            "item": [
+                                                {
+                                                    "name": "[POST] api/v1/admin/applications/{id}/regenerate-credentials",
+                                                    "request": {
+                                                        "method": "POST",
+                                                        "header": [
+                                                            {
+                                                                "key": "Accept",
+                                                                "value": "application/json",
+                                                                "type": "text"
+                                                            },
+                                                            {
+                                                                "key": "Content-Type",
+                                                                "value": "application/json",
+                                                                "type": "text"
+                                                            }
+                                                        ],
+                                                        "url": {
+                                                            "raw": "{{base_url}}/api/v1/admin/applications/{id}/regenerate-credentials",
+                                                            "host": [
+                                                                "{{base_url}}"
+                                                            ],
+                                                            "path": [
+                                                                "api",
+                                                                "v1",
+                                                                "admin",
+                                                                "applications",
+                                                                "{id}",
+                                                                "regenerate-credentials"
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "webhook",
+                    "item": [
+                        {
+                            "name": "[POST] api/v1/webhook/{provider}",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/webhook/{provider}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "webhook",
+                                        "{provider}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "",
+                            "item": [
+                                {
+                                    "name": "test",
+                                    "item": [
+                                        {
+                                            "name": "[POST] api/v1/webhook/{provider}/test",
+                                            "request": {
+                                                "method": "POST",
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json",
+                                                        "type": "text"
+                                                    },
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "application/json",
+                                                        "type": "text"
+                                                    }
+                                                ],
+                                                "url": {
+                                                    "raw": "{{base_url}}/api/v1/webhook/{provider}/test",
+                                                    "host": [
+                                                        "{{base_url}}"
+                                                    ],
+                                                    "path": [
+                                                        "api",
+                                                        "v1",
+                                                        "webhook",
+                                                        "{provider}",
+                                                        "test"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "checkout",
+                    "item": [
+                        {
+                            "name": "[POST] api/v1/checkout",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/checkout",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "checkout"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"amount\": 625107,\n    \"currency\": \"currency sample value\",\n    \"provider\": \"provider sample value\",\n    \"external_id\": \"external_id sample value\",\n    \"description\": \"description sample value\",\n    \"success_url\": \"success_url sample value\",\n    \"cancel_url\": \"cancel_url sample value\",\n    \"metadata\": []\n}",
+                                    "options": []
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "transactions",
+                    "item": [
+                        {
+                            "name": "[GET] api/v1/transactions",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/transactions",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "transactions"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "stats",
+                            "item": [
+                                {
+                                    "name": "[GET] api/v1/transactions/stats",
+                                    "request": {
+                                        "method": "GET",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            },
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "{{base_url}}/api/v1/transactions/stats",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "api",
+                                                "v1",
+                                                "transactions",
+                                                "stats"
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "[GET] api/v1/transactions/{id}",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/transactions/{id}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "transactions",
+                                        "{id}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "application",
+                    "item": [
+                        {
+                            "name": "[GET] api/v1/application",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/application",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "application"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "health",
+            "item": [
+                {
+                    "name": "[GET] api/health",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/health",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "health"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000"
+        }
+    ]
+}

@@ -181,7 +181,7 @@
                 <div class="mt-auto d-flex justify-content-between align-items-center">
                   <div class="fw-bold text-success fs-5">${{ number_format($product->price, 2) }}</div>
                   <div>
-                    <form class="d-inline" method="POST" action="{{ route('test.quick-add') }}">
+                    <form class="d-inline" method="POST" action="{{ route('cart.quick-add') }}">
                       @csrf
                       <input type="hidden" name="quantity" value="1">
                       <input type="hidden" name="product_id" value="{{ $product->id }}">  

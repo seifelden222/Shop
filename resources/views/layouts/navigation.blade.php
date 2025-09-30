@@ -27,7 +27,7 @@
             ><i class="bi bi-search fs-5"></i
             ><span class="visually-hidden">Search</span></a
           >
-          <a class="position-relative text-dark" href="{{ route('carts.index') }}" title="Cart">
+          <a class="position-relative text-dark" href="{{ route('dashboard') }}" title="Cart">
             <i class="bi bi-cart4 fs-5"></i>
             @auth
               @if(auth()->user()->cart_count > 0)
@@ -45,10 +45,8 @@
                 <span class="visually-hidden">Account</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                @if(Route::has('dashboard'))
-                  <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
-                @endif
-                <li><a class="dropdown-item" href="{{ route('test.index') }}">My Cart</a></li>
+           
+                <li><a class="dropdown-item" href="{{ route('dashboard') }}">My Cart</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                   <form method="POST" action="{{ route('logout') }}">
