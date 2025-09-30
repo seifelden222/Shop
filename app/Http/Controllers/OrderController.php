@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditOrderRquest;
 use App\Http\Requests\OrderRequest;
+use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -16,7 +21,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::with('orderItems.product')->get();
-        if (!$orders)     return redirect()->back()->with('error', 'No orders found.');
+        if ($orders->isEmpty()) return redirect()->back()->with('error', 'No orders found.');
 
         return view('orders.index', compact('orders'));
     }
@@ -24,13 +29,26 @@ class OrderController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    // public function create(Request $request)
+
     public function create()
     {
 
-        $products = Product::select('id', 'name', 'price')->get();
-        if (!$products) return redirect()->back()->with('error', 'No products found to create an order.');
+        // Prepare cart data for checkout view
+        $user = Auth::user();
+        if (!$user) return redirect()->route('login');
 
-        return view('orders.create', compact('products'));
+        $cart = Cart::with('product')->asCart()->where('user_id', $user->id)->get();
+        if ($cart->isEmpty()) return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+
+        // Map image and convert to array for the blade
+        $cart = $cart->map(function ($c) {
+            $c->image = $c->product->main_image ?? null;
+            return $c;
+        })->toArray();
+
+        $total = (float) collect($cart)->sum('total_price');
+        return view('orders.create', compact('cart', 'total'));
     }
 
     /**
@@ -38,36 +56,35 @@ class OrderController extends Controller
      */
     public function store(OrderRequest $request)
     {
+        $user = Auth::user();
+
+        $cartItems = Cart::with('product')->asCart()->where('user_id', $user->id)->get();
+        if ($cartItems->isEmpty()) return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+
+        $validated = $request->validated();
+
         try {
 
+            return DB::transaction(function () use ($validated, $cartItems, $user) {
+                // Calculate total first
+                $total = $cartItems->sum('total_price');
+                $shippingCost = $validated['shipping_cost'] ?? 0;
 
-            $validated = $request->validated();
-            // Further processing like creating the order and order items would go here.
-            return DB::transaction(function () use ($validated) {
-                $order = Order::create($validated);
-                $items = $validated['items'] ?? [];
-                $totalAmount = 0;
-                foreach ($items as $item) {
-                    $quantity = (int) ($item['quantity'] ?? 1);
-                    $unitPrice = (float) ($item['unit_price'] ?? 0.0);
-                    $totalPrice = $quantity * $unitPrice;
+                $order = Order::create($validated + [
+                    'user_id' => $user->id,
+                    'total_price' => $total + $shippingCost,
+                    'order_number' => Str::uuid(),
+                    'status' => 'pending',
+                ]);
 
-                    $order->orderItems()->create([
-                        'product_id' => $item['product_id'],
-                        'product_name' => $item['product_name'] ?? 'Unknown Product',
-                        'quantity' => $quantity,
-                        'unit_price' => $unitPrice,
-                        'total_price' => $totalPrice,
-                    ]);
-
-                    $totalAmount += $totalPrice;
+                foreach ($cartItems as $item) {
+                    $item->update(['order_id' => $order->id]);
                 }
-                $shipping_cost = $validated['shipping_cost'] ?? 0.0;
-                $order->total_price = $totalAmount + $shipping_cost;
-                $order->save();
-                return redirect()->route('orders.show')->with('success', 'Order created successfully.');
+
+                return redirect()->route('orders.show', $order->id)->with('success', 'Order placed successfully.');
             });
         } catch (\Exception $e) {
+
             return redirect()->back()->with('error', 'An error occurred while creating the order. ' . $e->getMessage());
         }
     }
@@ -77,10 +94,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-
         $order = Order::with('orderItems.product')->findOrFail($id);
-        if (!$order) return redirect()->back()->with('error', 'Order not found.');
-
         return view('orders.show', compact('order'));
     }
 
@@ -91,46 +105,53 @@ class OrderController extends Controller
     {
         $products = Product::select('id', 'name', 'price')->get();
         if (!$products) return redirect()->back()->with('error', 'No products found to create an order.');
+
         return view('orders.edit', compact('order', 'products'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(OrderRequest $request, Order $order)
+    public function update(EditOrderRquest $request, Order $order)
     {
         $validated = $request->validated();
+
         return DB::transaction(function () use ($validated, $order) {
-            $order->update([
-                'vadlidated' => $validated,
-                'customer_name' => $validated['customer_name'],
-                'customer_email' => $validated['customer_email'],
-            ]);
-            $items = $validated['items'] ?? [];
-            $totalAmount = 0;
+            // Update order basic info
+            $order->update($validated);
 
-            // Delete existing items
-            $order->orderItems()->delete();
+            // Only update items if they are provided
+            if (isset($validated['items']) && !empty($validated['items'])) {
+                $items = $validated['items'];
+                $totalAmount = 0;
 
-            foreach ($items as $item) {
-                $quantity = (int) ($item['quantity'] ?? 1);
-                $unitPrice = (float) ($item['unit_price'] ?? 0.0);
-                $totalPrice = $quantity * $unitPrice;
+                // Delete existing items
+                $order->orderItems()->delete();
 
-                $order->orderItems()->create([
-                    'product_id' => $item['product_id'],
-                    'product_name' => $item['product_name'] ?? 'Unknown Product',
-                    'quantity' => $quantity,
-                    'unit_price' => $unitPrice,
-                    'total_price' => $totalPrice,
-                ]);
+                foreach ($items as $item) {
+                    $quantity = (int) ($item['quantity'] ?? 1);
+                    $unitPrice = (float) ($item['unit_price'] ?? 0.0);
+                    $totalPrice = $quantity * $unitPrice;
 
-                $totalAmount += $totalPrice;
+                    $order->orderItems()->create([
+                        'user_id' => $order->user_id,
+                        'product_id' => $item['product_id'],
+                        'product_name' => $item['product_name'] ?? 'Unknown Product',
+                        'quantity' => $quantity,
+                        'unit_price' => $unitPrice,
+                        'total_price' => $totalPrice,
+                    ]);
+
+
+
+                    $totalAmount += $totalPrice;
+                }
+
+                $shipping_cost = $validated['shipping_cost'] ?? 0.0;
+                $order->total_price = $totalAmount + $shipping_cost;
+                $order->save();
             }
-            $shipping_cost = $validated['shipping_cost'] ?? 0.0;
-            // format as string to match the model's decimal cast
-            $order->total_price = number_format((float) $totalAmount + $shipping_cost, 2, '.', '');
-            $order->save();
+
             return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
         });
     }
@@ -138,11 +159,15 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order, $id)
+    public function destroy($id)
     {
-
         $order = Order::findOrFail($id);
         $order->delete();
-        return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
+        if ($order->count() > 0) {
+            return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
+        }else{
+            return redirect()->route('welcome')->with('success', 'Order deleted successfully.');
+        }
+
     }
 }

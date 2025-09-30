@@ -33,6 +33,14 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /**
+     * Get all cart items for this product.
+     */
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     // public function brand()
     // {
     //     return $this->belongsTo(Brand::class);

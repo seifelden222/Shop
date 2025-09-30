@@ -111,6 +111,10 @@
                         <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
                             <i class="bi bi-arrow-left"></i> Continue Shopping
                         </a>
+                     
+                        <a href="{{ route('orders.create') }}" class="btn btn-success btn-lg">
+                            <i class="bi bi-bag-check"></i> Proceed to Checkout
+                        </a>
                     </div>
                 </div>
             </div>

@@ -15,9 +15,13 @@
               <a href="{{ route('brands.index') }}" class="btn btn-outline-light btn-lg">
                 <i class="bi bi-arrow-left"></i> Back to Brands
               </a>
-              <a href="{{ route('brands.edit', $brands) }}" class="btn btn-warning btn-lg">
-                <i class="bi bi-pencil"></i> Edit Brand
-              </a>
+              @auth
+                @if(auth()->user()->role === 'admin')
+                  <a href="{{ route('brands.edit', $brands) }}" class="btn btn-warning btn-lg">
+                    <i class="bi bi-pencil"></i> Edit Brand
+                  </a>
+                @endif
+              @endauth
             </div>
           </div>
         </div>
@@ -53,44 +57,26 @@
                 </div>
 
                 <div class="mb-3">
-                  <strong>Slug:</strong><br>
-                  <span class="text-muted">{{ $brands->slug }}</span>
-                </div>
-
-                <div class="mb-3">
                   <strong>Description:</strong><br>
                   <span class="text-muted">{{ $brands->description ?? 'No description provided.' }}</span>
                 </div>
 
-                <div class="mb-3">
-                  <strong>Status:</strong><br>
-                  <span class="badge bg-{{ $brands->is_active ? 'success' : 'danger' }} fs-6">
-                    {{ $brands->is_active ? 'Active' : 'Inactive' }}
-                  </span>
-                </div>
-
-                <div class="mb-3">
-                  <strong>Created:</strong><br>
-                  <span class="text-muted">{{ $brands->created_at->format('M d, Y - H:i') }}</span>
-                </div>
-
-                <div class="mb-3">
-                  <strong>Last Updated:</strong><br>
-                  <span class="text-muted">{{ $brands->updated_at->format('M d, Y - H:i') }}</span>
-                </div>
-
                 <div class="d-flex gap-2">
-                  <a href="{{ route('brands.edit', $brands) }}" class="btn btn-warning btn-sm">
-                    <i class="bi bi-pencil"></i> Edit
-                  </a>
-                  <form method="POST" action="{{ route('brands.destroy', $brands) }}" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm" 
-                            onclick="return confirm('Are you sure you want to delete this brand?')">
-                      <i class="bi bi-trash"></i> Delete
-                    </button>
-                  </form>
+                  @auth
+                    @if(auth()->user()->role === 'admin')
+                      <a href="{{ route('brands.edit', $brands) }}" class="btn btn-warning btn-sm">
+                        <i class="bi bi-pencil"></i> Edit
+                      </a>
+                      <form method="POST" action="{{ route('brands.destroy', $brands) }}" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm" 
+                                onclick="return confirm('Are you sure you want to delete this brand?')">
+                          <i class="bi bi-trash"></i> Delete
+                        </button>
+                      </form>
+                    @endif
+                  @endauth
                 </div>
               </div>
             </div>
@@ -105,6 +91,7 @@
                 @if($brands->products && $brands->products->count() > 0)
                   <div class="row">
                     @foreach($brands->products as $product)
+                    @if($product->status == "published" && $product->stock > 0)
                     <div class="col-12 col-md-6 col-lg-4 mb-3">
                       <div class="card h-100">
                         @if($product->main_image)
@@ -125,22 +112,35 @@
                           </p>
                           <div class="mb-2">
                             <small class="text-muted">
-                              <strong>Stock:</strong> {{ $product->stock }} items<br>
-                              <strong>Status:</strong> 
-                              <span class="badge bg-{{ $product->status === 'published' ? 'success' : ($product->status === 'archived' ? 'warning' : 'danger') }}">
-                                {{ ucfirst($product->status) }}
-                              </span>
+                              <strong>Stock:</strong> {{ $product->stock }} items
                             </small>
                           </div>
                           <div class="mt-auto d-flex justify-content-between align-items-center">
                             <div class="fw-bold text-success">${{ number_format($product->price, 2) }}</div>
                             <div>
-                              <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm">View</a>
+                              @auth
+                                @if(auth()->user()->role === 'admin')
+                                  <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm">View</a>
+                                @else
+                                  <form class="d-inline" method="POST" action="{{ route('cart.quick-add') }}">
+                                    @csrf
+                                    <input type="hidden" name="quantity" value="1">
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                      <i class="bi bi-cart-plus"></i>
+                                    </button>
+                                  </form>
+                                  <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info btn-sm ms-1">View</a>
+                                @endif
+                              @else
+                                <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info btn-sm">View</a>
+                              @endauth
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                    @endif
                     @endforeach
                   </div>
                 @else

@@ -22,21 +22,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
-Route::resource('categories', CategoryController::class);
-Route::resource('products', ProductController::class);
-Route::resource('brands', BrandController::class);
-Route::resource('orders', OrderController::class);
+require __DIR__ . '/auth.php';
 
 
 
 
 
-// Cart routes
 Route::middleware('auth')->group(function () {
+    // Cart routes
+    Route::resource('products', ProductController::class);
+    Route::resource('brands', BrandController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('orders', OrderController::class);
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::delete('/cart/{cartId}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::put('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
-    Route::post('/cart/quick-add',[CartController::class,'quickAdd'])->name('cart.quick-add');
+    Route::post('/cart/quick-add', [CartController::class, 'quickAdd'])->name('cart.quick-add');
 });
-

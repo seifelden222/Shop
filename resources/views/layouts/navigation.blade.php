@@ -19,6 +19,12 @@
             <li class="nav-item px-2">
               <a class="nav-link" href="#">Contact</a>
             </li>
+            @if (\App\Models\Order::count() > 0)
+            
+            <li class="nav-item px-2">
+              <a class="nav-link" href="{{ route('orders.index') }}">Orders</a>
+            </li>
+            @endif
           </ul>
         </div>
 
