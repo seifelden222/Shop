@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventSent;
 use App\Http\Requests\EditOrderRquest;
 use App\Http\Requests\OrderRequest;
 use App\Models\Cart;
@@ -10,6 +11,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -80,7 +82,10 @@ class OrderController extends Controller
                 foreach ($cartItems as $item) {
                     $item->update(['order_id' => $order->id]);
                 }
-
+                if ($order) {
+                    $cartItems = Cart::with('product')->where('order_id', $order->id)->get();
+                    Event::dispatch(new EventSent($order->user, $order, $cartItems));
+                }
                 return redirect()->route('orders.show', $order->id)->with('success', 'Order placed successfully.');
             });
         } catch (\Exception $e) {
@@ -150,6 +155,9 @@ class OrderController extends Controller
                 $shipping_cost = $validated['shipping_cost'] ?? 0.0;
                 $order->total_price = $totalAmount + $shipping_cost;
                 $order->save();
+
+                $cartItems = Cart::with('product')->where('order_id', $order->id)->get();
+                Event::dispatch(new EventSent($order->user, $order, $cartItems));
             }
 
             return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
@@ -165,9 +173,8 @@ class OrderController extends Controller
         $order->delete();
         if ($order->count() > 0) {
             return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
-        }else{
+        } else {
             return redirect()->route('welcome')->with('success', 'Order deleted successfully.');
         }
-
     }
 }
