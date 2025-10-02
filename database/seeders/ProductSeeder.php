@@ -12,19 +12,25 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get existing categories to assign products to them
+        // Get existing categories and brands
         $categories = \App\Models\Category::all();
+        $brands = \App\Models\Brand::all();
         
         if ($categories->isEmpty()) {
-            // If no categories exist, create some first
             $this->call(CategorySeeder::class);
             $categories = \App\Models\Category::all();
+        }
+        
+        if ($brands->isEmpty()) {
+            $this->call(BrandSeeder::class);
+            $brands = \App\Models\Brand::all();
         }
 
         // Create specific featured products
         $featuredProducts = [
             [
                 'category_id' => $categories->where('name', 'Electronics')->first()?->id ?? $categories->first()->id,
+                'brand_id' => $brands->where('name', 'Apple')->first()?->id,
                 'brand' => 'Apple',
                 'name' => 'iPhone 15 Pro',
                 'description' => 'Latest iPhone with advanced camera system, A17 Pro chip, and titanium design.',
@@ -35,6 +41,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'category_id' => $categories->where('name', 'Electronics')->first()?->id ?? $categories->first()->id,
+                'brand_id' => $brands->where('name', 'Samsung')->first()?->id,
                 'brand' => 'Samsung',
                 'name' => 'Galaxy S24 Ultra',
                 'description' => 'Premium Android smartphone with S Pen, exceptional camera, and large display.',
@@ -45,6 +52,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'category_id' => $categories->where('name', 'Electronics')->first()?->id ?? $categories->first()->id,
+                'brand_id' => $brands->where('name', 'Sony')->first()?->id,
                 'brand' => 'Sony',
                 'name' => 'WH-1000XM5 Headphones',
                 'description' => 'Industry-leading noise canceling wireless headphones with premium sound quality.',
@@ -55,6 +63,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'category_id' => $categories->where('name', 'Sports & Outdoors')->first()?->id ?? $categories->first()->id,
+                'brand_id' => $brands->where('name', 'Nike')->first()?->id,
                 'brand' => 'Nike',
                 'name' => 'Air Max 270',
                 'description' => 'Comfortable running shoes with Max Air unit and modern design.',
@@ -73,6 +82,7 @@ class ProductSeeder extends Seeder
         foreach ($categories as $category) {
             \App\Models\Product::factory(10)->create([
                 'category_id' => $category->id,
+                'brand_id' => $brands->random()->id,
             ]);
         }
     }

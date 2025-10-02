@@ -46,6 +46,7 @@
           </div>
 
           @forelse($brands as $brand)
+          @if($brand->is_active)
           <div class="col-12 col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
               @if($brand->image)
@@ -80,25 +81,38 @@
                     {{ $brand->products_count ?? 0 }} Products
                   </div>
                   <div>
-                    <a href="{{ route('brands.show', $brand) }}" class="btn btn-info btn-sm">
-                      <i class="bi bi-eye"></i> View
-                    </a>
-                    <a href="{{ route('brands.edit', $brand) }}" class="btn btn-outline-warning btn-sm ms-1">
-                      <i class="bi bi-pencil"></i> Edit
-                    </a>
-                    <form method="POST" action="{{ route('brands.destroy', $brand) }}" class="d-inline">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn btn-outline-danger btn-sm ms-1" 
-                              onclick="return confirm('Are you sure you want to delete this brand?')">
-                        <i class="bi bi-trash"></i> Delete
-                      </button>
-                    </form>
+                    @auth
+                      @if(auth()->user()->role === 'admin')
+                        <a href="{{ route('brands.show', $brand) }}" class="btn btn-info btn-sm">
+                          <i class="bi bi-eye"></i> View
+                        </a>
+                        <a href="{{ route('brands.edit', $brand) }}" class="btn btn-outline-warning btn-sm ms-1">
+                          <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <form method="POST" action="{{ route('brands.destroy', $brand) }}" class="d-inline">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" class="btn btn-outline-danger btn-sm ms-1" 
+                                  onclick="return confirm('Are you sure you want to delete this brand?')">
+                            <i class="bi bi-trash"></i> Delete
+                          </button>
+                        </form>
+                      @else
+                        <a href="{{ route('brands.show', $brand) }}" class="btn btn-outline-info btn-sm">
+                          <i class="bi bi-eye"></i> Explore
+                        </a>
+                      @endif
+                    @else
+                      <a href="{{ route('brands.show', $brand) }}" class="btn btn-outline-info btn-sm">
+                        <i class="bi bi-eye"></i> View
+                      </a>
+                    @endauth
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          @endif
           @empty
           <div class="col-12 text-center">
             <div class="alert alert-info">

@@ -15,9 +15,13 @@
               <a href="{{ route('categories.index') }}" class="btn btn-outline-light btn-lg">
                 <i class="bi bi-arrow-left"></i> Back to Categories
               </a>
-              <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning btn-lg">
-                <i class="bi bi-pencil"></i> Edit Category
-              </a>
+              @auth
+                @if(auth()->user()->role === 'admin')
+                  <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning btn-lg">
+                    <i class="bi bi-pencil"></i> Edit Category
+                  </a>
+                @endif
+              @endauth
             </div>
           </div>
         </div>
@@ -57,28 +61,22 @@
                   <span class="text-muted">{{ $category->description ?? 'No description provided.' }}</span>
                 </div>
 
-                <div class="mb-3">
-                  <strong>Created:</strong><br>
-                  <span class="text-muted">{{ $category->created_at->format('M d, Y - H:i') }}</span>
-                </div>
-
-                <div class="mb-3">
-                  <strong>Last Updated:</strong><br>
-                  <span class="text-muted">{{ $category->updated_at->format('M d, Y - H:i') }}</span>
-                </div>
-
                 <div class="d-flex gap-2">
-                  <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning btn-sm">
-                    <i class="bi bi-pencil"></i> Edit
-                  </a>
-                  <form method="POST" action="{{ route('categories.destroy', $category) }}" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm" 
-                            onclick="return confirm('Are you sure you want to delete this category?')">
-                      <i class="bi bi-trash"></i> Delete
-                    </button>
-                  </form>
+                  @auth
+                    @if(auth()->user()->role === 'admin')
+                      <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning btn-sm">
+                        <i class="bi bi-pencil"></i> Edit
+                      </a>
+                      <form method="POST" action="{{ route('categories.destroy', $category) }}" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm" 
+                                onclick="return confirm('Are you sure you want to delete this category?')">
+                          <i class="bi bi-trash"></i> Delete
+                        </button>
+                      </form>
+                    @endif
+                  @endauth
                 </div>
               </div>
             </div>
@@ -93,6 +91,7 @@
                 @if($category->products && $category->products->count() > 0)
                   <div class="row">
                     @foreach($category->products as $product)
+                    @if($product->status == "published" && $product->stock > 0)
                     <div class="col-12 col-md-6 col-lg-4 mb-3">
                       <div class="card h-100">
                         @if($product->main_image)
@@ -114,12 +113,29 @@
                           <div class="mt-auto d-flex justify-content-between align-items-center">
                             <div class="fw-bold text-success">${{ $product->price }}</div>
                             <div>
-                              <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm">View</a>
+                              @auth
+                                @if(auth()->user()->role === 'admin')
+                                  <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm">View</a>
+                                @else
+                                  <form class="d-inline" method="POST" action="{{ route('cart.quick-add') }}">
+                                    @csrf
+                                    <input type="hidden" name="quantity" value="1">
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                      <i class="bi bi-cart-plus"></i>
+                                    </button>
+                                  </form>
+                                  <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info btn-sm ms-1">View</a>
+                                @endif
+                              @else
+                                <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info btn-sm">View</a>
+                              @endauth
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                    @endif
                     @endforeach
                   </div>
                 @else

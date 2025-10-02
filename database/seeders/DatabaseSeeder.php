@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             BrandSeeder::class,
             ProductSeeder::class,
+            OrderSeeder::class,
+            CartSeeder::class,
         ]);
 
         $this->command->info('Shop data seeded successfully!');

@@ -14,23 +14,26 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            // $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade');
-            $table->string('brand')->nullable();
+            // Brand relationship - just the column, no foreign key constraint
+            $table->unsignedBigInteger('brand_id')->nullable();
+            $table->string('brand')->nullable(); // Keep brand name for backward compatibility
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2);
             $table->integer('stock')->default(0);
             $table->string('main_image')->nullable();
             $table->json('images')->nullable();
-            // default must be one of the enum values; use 'published' instead of 'active'
             $table->enum('status', ['published', 'archived', 'block'])->default('published');
             $table->date('published_at')->nullable();
             $table->string('name_snapshot')->nullable();
             $table->softDeletes();
             $table->timestamps();
+            
+            // Note: Foreign key constraint for brand_id will be added 
+            // in a separate migration after brands table is created
         });
     }
-        /**
+    /**
      * Reverse the migrations.
      */
     public function down(): void

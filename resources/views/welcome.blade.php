@@ -1,5 +1,15 @@
 @extends('layouts.app')
 @section('content')
+
+@if(session('success'))
+<div class="container mt-3">
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+</div>
+@endif
+
 <section class="hero">
       <div class="container hero-content text-white">
         <div class="row">
@@ -12,6 +22,7 @@
             </p>
 
             <form class="mb-4" role="search" aria-label="Site search">
+              @csrf
               <div class="input-group input-group-lg shadow-sm">
                 <input
                   type="search"
@@ -46,6 +57,7 @@
         
         <div class="row justify-content-center g-3">
           @forelse($categories as $category)
+          @if($category->is_active)
           <div class="col-6 col-sm-4 col-md-2 d-flex justify-content-center">
             <a href="{{ route('categories.show', $category) }}" class="category-item text-center text-decoration-none">
               @if($category->image)
@@ -56,7 +68,7 @@
                        style="width: 80px; height: 80px; object-fit: cover;">
                 </div>
               @else
-                <div class="p-3 bg-dark rounded-circle shadow-sm d-inline-block mb-2">
+                <div class="p-3 bg-dark shadow-sm d-inline-block mb-2" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border: 2px; border-radius: 40px;">
                   <i class="bi bi-grid fs-2 text-light"></i>
                 </div>
               @endif
@@ -64,6 +76,7 @@
               <small class="text-muted">{{ $category->products_count ?? 0 }} items</small>
             </a>
           </div>
+          @endif
           @empty
           <!-- Default categories if none exist -->
           <div class="col-6 col-sm-4 col-md-2 d-flex justify-content-center">
@@ -135,6 +148,7 @@
           </div>
 
           @forelse($featuredProducts as $product)
+          @if($product->status == "published" && $product->stock > 0)
           <div class="col-12 col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
               @if($product->main_image)
@@ -170,9 +184,14 @@
                 <div class="mt-auto d-flex justify-content-between align-items-center">
                   <div class="fw-bold text-success fs-5">${{ number_format($product->price, 2) }}</div>
                   <div>
-                    <button class="btn btn-success btn-sm">
-                      <i class="bi bi-cart-plus"></i> Add to Cart
-                    </button>
+                    <form class="d-inline" method="POST" action="{{ route('cart.quick-add') }}">
+                      @csrf
+                      <input type="hidden" name="quantity" value="1">
+                      <input type="hidden" name="product_id" value="{{ $product->id }}">  
+                      <button type="submit" class="btn btn-success btn-sm">
+                        <i class="bi bi-cart-plus"></i> Add to Cart
+                      </button>
+                    </form>
                     <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info btn-sm ms-1">
                       <i class="bi bi-eye"></i> View
                     </a>
@@ -185,6 +204,7 @@
               </div>
             </div>
           </div>
+          @endif
           @empty
           <div class="col-12 text-center">
             <div class="alert alert-info">

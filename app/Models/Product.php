@@ -11,6 +11,7 @@ class Product extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = [
         'category_id',
+        'brand_id', // Added brand_id
         'name',
         'description',
         'price',
@@ -33,8 +34,27 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // public function brand()
-    // {
-    //     return $this->belongsTo(Brand::class);
-    // }
+    /**
+     * Get the brand that this product belongs to.
+     */
+    // Backwards-compatible brand relationship expected by resources
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    // Existing named relation kept for compatibility
+    public function brandRelation()
+    {
+        return $this->brand();
+    }
+
+    /**
+     * Get all cart items for this product.
+     */
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
 }
