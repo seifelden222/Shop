@@ -37,9 +37,16 @@ class Product extends Model
     /**
      * Get the brand that this product belongs to.
      */
-    public function brandRelation()
+    // Backwards-compatible brand relationship expected by resources
+    public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    // Existing named relation kept for compatibility
+    public function brandRelation()
+    {
+        return $this->brand();
     }
 
     /**

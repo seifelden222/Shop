@@ -17,12 +17,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
-use Filament\Infolists\Components\Section as InfoSection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Schemas\Components\Section;
+
 
 class ProductResource extends Resource
 {
@@ -107,7 +107,7 @@ class ProductResource extends Resource
     {
         return $schema
             ->components([
-                InfoSection::make('Product Details')
+                Section::make('Product Details')
                     ->schema([
                         TextEntry::make('name')->label('Product Name'),
                         TextEntry::make('price')->money('USD')->label('Price'),
@@ -116,14 +116,14 @@ class ProductResource extends Resource
                     ])
                     ->columns(2),
                 
-                InfoSection::make('Organization')
+                Section::make('Organization')
                     ->schema([
                         TextEntry::make('category.name')->label('Category'),
                         TextEntry::make('brand.name')->label('Brand'),
                     ])
                     ->columns(2),
                 
-                InfoSection::make('Details')
+                Section::make('Details')
                     ->schema([
                         TextEntry::make('description')->label('Description'),
                         ImageEntry::make('image')->label('Product Image'),

@@ -24,7 +24,11 @@ class CartResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Product';
+    // Use a valid attribute on the Cart model for the record title. Using
+    // an invalid attribute caused Filament to fall back to casting the
+    // entire model (producing the large JSON dump in the page). Set to
+    // 'id' as a safe default.
+    protected static ?string $recordTitleAttribute = 'id';
 
     public static function form(Schema $schema): Schema
     {
