@@ -10,6 +10,7 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -19,14 +20,17 @@ class ProductsTable
     {
         return $table
             ->columns([
-                TextColumn::make('category_id')
-                    ->numeric()
+                TextColumn::make('id')
+                    ->label('ID')
                     ->sortable(),
-                TextColumn::make('brand_id')
-                    ->numeric()
+                TextColumn::make('category.name')
+                    ->label('Category')
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('brand')
-                    ->searchable(),
+                TextColumn::make('brand.name')
+                    ->label('Brand')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('price')
@@ -36,8 +40,14 @@ class ProductsTable
                     ->numeric()
                     ->sortable(),
                 ImageColumn::make('main_image'),
-                TextColumn::make('status')
-                    ->badge(),
+                SelectColumn::make('status')
+                    ->options([
+                        'published' => 'Published',
+                        'draft' => 'Draft',
+                        'archived' => 'Archived',
+                    ])
+                    ->label('Status')
+                    ->sortable(),
                 TextColumn::make('published_at')
                     ->date()
                     ->sortable(),

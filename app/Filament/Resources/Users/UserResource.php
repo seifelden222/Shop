@@ -22,7 +22,9 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'User';
+    // Use a real attribute from the User model to avoid Filament trying to
+    // cast the whole model as a title (which produced the large JSON dump).
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
     {

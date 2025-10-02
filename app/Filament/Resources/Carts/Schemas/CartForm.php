@@ -34,6 +34,17 @@ class CartForm
                         ->default(1)
                         ->label('Quantity')
                         ->helperText('Minimum 1'),
+                    Select::make('status')
+                        ->options([
+                            'pending' => 'Pending',
+                            'active' => 'Active',
+                            'saved' => 'Saved',
+                            'removed' => 'Removed',
+                        ])
+                        ->default('pending')
+                        ->required()
+                        ->label('Status')
+                        ->helperText('Choose the cart item status'),
                 ])
                 ->columns(2),
         ]);
