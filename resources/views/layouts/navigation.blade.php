@@ -17,7 +17,7 @@
               <a class="nav-link" href="{{ route('brands.index') }}">Brands</a>
             </li>
             <li class="nav-item px-2">
-              <a class="nav-link" href="#">Contact</a>
+              <a class="nav-link" href="{{ route('contact') }}">Contact</a>
             </li>
             @if (\App\Models\Order::count() > 0)
             

@@ -12,6 +12,10 @@ use PHPUnit\Event\Code\Test;
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
 // Resource routes for the shop
 
 Route::get('/dashboard', [CartController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -27,12 +31,12 @@ require __DIR__ . '/auth.php';
 
 
 
+Route::resource('products', ProductController::class);
+Route::resource('brands', BrandController::class);
+Route::resource('categories', CategoryController::class);
 
 Route::middleware('auth')->group(function () {
     // Cart routes
-    Route::resource('products', ProductController::class);
-    Route::resource('brands', BrandController::class);
-    Route::resource('categories', CategoryController::class);
     Route::resource('orders', OrderController::class);
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::delete('/cart/{cartId}', [CartController::class, 'destroy'])->name('cart.destroy');

@@ -19,8 +19,8 @@ Route::post('/login', [AuthController::class, 'Login']);
 Route::post('/logout', [AuthController::class, 'Logout'])->middleware('auth:sanctum');
 
 // Public Routes
-Route::apiResource('products', ProductApiController::class)->only(['index', 'show']);
-Route::apiResource('brands', BrandApiController::class)->only(['index', 'show']);
+// Route::apiResource('products', ProductApiController::class)->only(['index', 'show']);
+// Route::apiResource('brands', BrandApiController::class)->only(['index', 'show']);
 
 // Brand Analytics Routes
 Route::get('/brands/analytics', [BrandApiController::class, 'analytics']);
