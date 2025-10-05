@@ -1,37 +1,13 @@
 @extends('layouts.app')
 @section('content')
-<section class="hero">
-  <div class="container hero-content text-white">
-    <div class="row">
-      <div class="col-12 col-md-8">
-        <h2 class="display-6 fw-bold">
-          All Products
-        </h2>
-        <p class="text-white-50 mb-4">
-          Manage your product inventory and listings.
-        </p>
-
-        <form class="mb-4" role="search" aria-label="Product search">
-          <div class="input-group input-group-lg shadow-sm">
-            <input
-              type="search"
-              class="form-control rounded-pill"
-              placeholder="Search products..."
-              aria-label="Search" />
-            <button class="btn btn-primary rounded-pill ms-2" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
-        </form>
-
-        <div class="d-flex gap-2">
-          <a href="{{ route('products.create') }}" class="btn btn-success btn-lg">Add New Product</a>
-          <a href="{{ route('products.index') }}" class="btn btn-outline-light btn-lg">View All</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+@include('components.hero', [
+  'title' => 'All Products',
+  'subtitle' => 'Manage your product inventory and listings.',
+  'primaryLabel' => 'Add New Product',
+  'primaryLink' => route('products.create'),
+  'secondaryLabel' => 'View All',
+  'secondaryLink' => route('products.index'),
+])
 
 <section aria-label="Products List">
   <div class="container py-4">
@@ -49,13 +25,13 @@
       @if($product->status == "published" && $product->stock > 0)
       <div class="col-12 col-md-4 mb-4">
 
-        <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm hover-shadow">
           @if($product->main_image)
           <img
             src="{{ asset('storage/' . $product->main_image) }}"
             alt="{{ $product->name }}"
             class="card-img-top"
-            style="height: 200px; object-fit: cover;" />
+            style="height: 200px; object-fit: cover;" loading="lazy" />
           @else
           <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
             <i class="bi bi-box-seam fs-1 text-muted"></i>

@@ -1,37 +1,13 @@
 @extends('layouts.app')
 @section('content')
-<section class="hero">
-      <div class="container hero-content text-white">
-        <div class="row">
-          <div class="col-12 col-md-8">
-            <h2 class="display-6 fw-bold">
-              Browse All Brands
-            </h2>
-            <p class="text-white-50 mb-4">
-              Discover our partner brands and their products.
-            </p>
-
-            <form class="mb-4" role="search" aria-label="Brand search">
-              <div class="input-group input-group-lg shadow-sm">
-                <input
-                  type="search"
-                  class="form-control rounded-pill"
-                  placeholder="Search brands..."
-                  aria-label="Search" />
-                <button class="btn btn-primary rounded-pill ms-2" type="submit">
-                  <i class="bi bi-search"></i>
-                </button>
-              </div>
-            </form>
-
-            <div class="d-flex gap-2">
-              <a href="{{ route('brands.create') }}" class="btn btn-success btn-lg">Add New Brand</a>
-              <a href="{{ route('brands.index') }}" class="btn btn-outline-light btn-lg">View All</a>
-            </div>
-          </div>
-        </div>
-      </div>
-</section>
+@include('components.hero', [
+  'title' => 'Browse All Brands',
+  'subtitle' => 'Discover our partner brands and their products.',
+  'primaryLabel' => 'Add New Brand',
+  'primaryLink' => route('brands.create'),
+  'secondaryLabel' => 'View All',
+  'secondaryLink' => route('brands.index'),
+])
 
 <section aria-label="Brands List">
       <div class="container py-4">
@@ -48,13 +24,13 @@
           @forelse($brands as $brand)
           @if($brand->is_active)
           <div class="col-12 col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
+            <div class="card h-100 shadow-sm hover-shadow">
               @if($brand->image)
                 <img
                   src="{{ asset('storage/' . $brand->image) }}"
                   alt="{{ $brand->name }}"
                   class="card-img-top"
-                  style="height: 200px; object-fit: cover;" />
+                  style="height: 200px; object-fit: cover;" loading="lazy" />
               @else
                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
                   <i class="bi bi-award fs-1 text-muted"></i>

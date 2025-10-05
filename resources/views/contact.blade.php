@@ -1,15 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-@extends('layouts.app')
-
-@section('content')
 
 
 <div class="container">
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm hover-shadow">
                 <div class="card-body d-flex flex-column flex-md-row align-items-center justify-content-between">
                     <div>
                         <h1 class="h3 fw-bold mb-1">Contact Us</h1>
@@ -25,7 +22,7 @@
 
     <div class="row g-4">
         <div class="col-lg-7">
-            <div id="contact-form" class="card contact-card shadow-sm p-3">
+            <div id="contact-form" class="card contact-card shadow-sm p-3 hover-shadow">
                 <div class="card-body">
                     <h4 class="mb-3">Get in touch</h4>
                     @if(session('success'))
@@ -74,7 +71,7 @@
         </div>
 
         <div class="col-lg-5">
-            <div class="card contact-card shadow-sm p-3">
+            <div class="card contact-card shadow-sm p-3 hover-shadow">
                 <div class="card-body">
                     <h5 class="mb-3">Contact details</h5>
                     <p class="mb-2"><i class="bi bi-telephone-fill me-2 text-primary"></i> Phone: <a href="tel:+201234567890">+20 123 456 7890</a></p>

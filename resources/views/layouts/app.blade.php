@@ -39,5 +39,7 @@
         @include('layouts.footer')
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+            {{-- Render view-pushed scripts (e.g. AJAX search script pushed from components) --}}
+            @stack('scripts')
     </body>
 </html>

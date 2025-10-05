@@ -7,6 +7,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\Event\Code\Test;
 
@@ -34,6 +35,9 @@ require __DIR__ . '/auth.php';
 Route::resource('products', ProductController::class);
 Route::resource('brands', BrandController::class);
 Route::resource('categories', CategoryController::class);
+
+// Search route (site-wide)
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 Route::middleware('auth')->group(function () {
     // Cart routes

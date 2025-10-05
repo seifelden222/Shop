@@ -48,7 +48,7 @@
     @else
     <div class="row">
         <div class="col-12">
-            <div class="card">
+                <div class="card hover-shadow">
                 <div class="card-header">
                     <h5 class="mb-0">All Orders ({{ count($orders) }} orders)</h5>
                 </div>

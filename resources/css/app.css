@@ -3,14 +3,9 @@
 
 /* Custom styles for your Laravel Shop application */
 .hero {
-    /* First try the hero image (if present in public/images). If it's
-         missing, the linear-gradient fallback will be shown so the hero
-         section is still visually useful. */
- 
-    /* background-color: #666;  */
     background-size: cover;
     background-position: center;
-    min-height: 520px;
+    min-height: 430px;
     position: relative;
     display: flex;
     align-items: center;
@@ -39,6 +34,26 @@
     transform: translateY(-10px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+
+/* Small reusable hover shadow helper used across views */
+.hover-shadow {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.hover-shadow:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+/* Cart specific styles */
+.cart-item { padding: 12px 16px; }
+.cart-img { height: 80px; width: 80px; object-fit: cover; border-radius: 10px; }
+.cart-qty { display:flex; align-items:center; gap:8px; justify-content:center; }
+.qty-input { width:64px; text-align:center; border-radius:8px; }
+.qty-btn { min-width:36px; }
+
+.order-summary .btn { border-radius: 8px; }
+.order-summary .btn-primary { box-shadow: 0 6px 18px rgba(0,123,255,0.12); }
+
 
 /* Footer styles (RTL-friendly) */
 .site-footer {

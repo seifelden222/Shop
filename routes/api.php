@@ -26,10 +26,10 @@ Route::post('/logout', [AuthController::class, 'Logout'])->middleware('auth:sanc
 Route::get('/brands/analytics', [BrandApiController::class, 'analytics']);
 Route::get('/brands/{brand}/products', [BrandApiController::class, 'products']);
 
-// Cart Routes (with auth)
-Route::apiResource('carts', CartApiController::class)->middleware('auth:sanctum');
-
-// Order Routes (with auth)
-Route::apiResource('orders', OrderApiController::class)->middleware('auth:sanctum');
+// Cart & Order Routes (with auth) - name routes with the 'api.' prefix to avoid collisions with web routes
+Route::middleware('auth:sanctum')->name('api.')->group(function () {
+    Route::apiResource('carts', CartApiController::class);
+    Route::apiResource('orders', OrderApiController::class);
+});
 
     Route::get('/brands/total-products/{brandId?}', [BrandController::class, 'TotalProducts']);

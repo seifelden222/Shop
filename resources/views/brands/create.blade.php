@@ -1,31 +1,17 @@
 @extends('layouts.app')
 @section('content')
-<section class="hero">
-      <div class="container hero-content text-white">
-        <div class="row">
-          <div class="col-12 col-md-8">
-            <h2 class="display-6 fw-bold">
-              Create New Brand
-            </h2>
-            <p class="text-white-50 mb-4">
-              Add a new brand to your marketplace.
-            </p>
-
-            <div class="d-flex gap-2">
-              <a href="{{ route('brands.index') }}" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-arrow-left"></i> Back to Brands
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-</section>
+<!-- @include('components.hero', [
+  'title' => 'Create New Brand',
+  'subtitle' => 'Add a new brand to your marketplace.',
+  'primaryLabel' => 'Back to Brands',
+  'primaryLink' => route('brands.index'),
+]) -->
 
 <section aria-label="Create Brand Form">
       <div class="container py-4">
         <div class="row justify-content-center">
           <div class="col-12 col-lg-8">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm hover-shadow">
               <div class="card-header bg-primary text-white">
                 <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Brand</h4>
               </div>

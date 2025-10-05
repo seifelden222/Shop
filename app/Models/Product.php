@@ -34,10 +34,7 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    /**
-     * Get the brand that this product belongs to.
-     */
-    // Backwards-compatible brand relationship expected by resources
+
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');

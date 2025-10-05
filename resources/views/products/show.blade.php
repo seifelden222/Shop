@@ -1,38 +1,19 @@
 @extends('layouts.app')
 @section('content')
-<section class="hero">
-  <div class="container hero-content text-white">
-    <div class="row">
-      <div class="col-12 col-md-8">
-        <h2 class="display-6 fw-bold">
-          {{ $products->name }}
-        </h2>
-        <p class="text-white-50 mb-4">
-          {{ $products->description ?? 'No description available.' }}
-        </p>
-        <div class="d-flex gap-2">
-          <a href="{{ route('products.index') }}" class="btn btn-outline-light btn-lg">
-            <i class="bi bi-arrow-left"></i> Back to Products
-          </a>
-          @auth
-            @if(auth()->user()->role === 'admin')
-              <a href="{{ route('products.edit', $products) }}" class="btn btn-warning btn-lg">
-                <i class="bi bi-pencil"></i> Edit Product
-              </a>
-            @endif
-          @endauth
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
+@include('components.hero', [
+  'title' => $products->name,
+  'subtitle' => $products->description ?? 'No description available.',
+  'primaryLabel' => 'Back to Products',
+  'primaryLink' => route('products.index'),
+  'secondaryLabel' => auth()->check() && auth()->user()->role === 'admin' ? 'Edit Product' : null,
+  'secondaryLink' => auth()->check() && auth()->user()->role === 'admin' ? route('products.edit', $products) : null,
+])
 
 <section aria-label="Product Details">
   <div class="container py-4">
     <div class="row">
       <div class="col-12 col-lg-4 mb-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm hover-shadow">
           <div class="card-header bg-info text-white">
             <h5 class="mb-0"><i class="bi bi-box-seam"></i> Product Information</h5>
           </div>
@@ -42,7 +23,7 @@
               <img src="{{ asset('storage/' . $products->main_image) }}"
                 alt="{{ $products->name }}"
                 class="img-fluid rounded"
-                style="max-height: 300px;">
+                style="max-height: 300px;" loading="lazy">
             </div>
             @else
             <div class="text-center mb-3 p-4 bg-light rounded">
@@ -128,7 +109,7 @@
       </div>
 
       <div class="col-12 col-lg-8">
-        <div class="card shadow-sm">
+          <div class="card shadow-sm hover-shadow">
           <div class="card-header bg-primary text-white">
             <h5 class="mb-0"><i class="bi bi-graph-up"></i> Product Analytics & Related</h5>
           </div>
@@ -162,12 +143,12 @@
               @foreach($products->category->products->take(4) as $relatedProduct)
               @if($relatedProduct->id !== $products->id && $relatedProduct->status == "published" && $relatedProduct->stock > 0)
               <div class="col-6 col-md-3 mb-3">
-                <div class="card h-100">
-                  @if($relatedProduct->main_image)
-                  <img src="{{ asset('storage/' . $relatedProduct->main_image) }}"
-                    alt="{{ $relatedProduct->name }}"
-                    class="card-img-top"
-                    style="height: 120px; object-fit: cover;">
+                <div class="card h-100 hover-shadow">
+                      @if($relatedProduct->main_image)
+                      <img src="{{ asset('storage/' . $relatedProduct->main_image) }}"
+                        alt="{{ $relatedProduct->name }}"
+                        class="card-img-top"
+                        style="height: 120px; object-fit: cover;" loading="lazy">
                   @else
                   <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 120px;">
                     <i class="bi bi-box-seam text-muted"></i>

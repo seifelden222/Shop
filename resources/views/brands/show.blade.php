@@ -1,38 +1,19 @@
 @extends('layouts.app')
 @section('content')
-<section class="hero">
-      <div class="container hero-content text-white">
-        <div class="row">
-          <div class="col-12 col-md-8">
-            <h2 class="display-6 fw-bold">
-              {{ $brands->name }}
-            </h2>
-            <p class="text-white-50 mb-4">
-              {{ $brands->description ?? 'No description available.' }}
-            </p>
-
-            <div class="d-flex gap-2">
-              <a href="{{ route('brands.index') }}" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-arrow-left"></i> Back to Brands
-              </a>
-              @auth
-                @if(auth()->user()->role === 'admin')
-                  <a href="{{ route('brands.edit', $brands) }}" class="btn btn-warning btn-lg">
-                    <i class="bi bi-pencil"></i> Edit Brand
-                  </a>
-                @endif
-              @endauth
-            </div>
-          </div>
-        </div>
-      </div>
-</section>
+@include('components.hero', [
+  'title' => $brands->name,
+  'subtitle' => $brands->description ?? 'No description available.',
+  'primaryLabel' => 'Back to Brands',
+  'primaryLink' => route('brands.index'),
+  'secondaryLabel' => auth()->check() && auth()->user()->role === 'admin' ? 'Edit Brand' : null,
+  'secondaryLink' => auth()->check() && auth()->user()->role === 'admin' ? route('brands.edit', $brands) : null,
+])
 
 <section aria-label="Brand Details">
       <div class="container py-4">
         <div class="row">
           <div class="col-12 col-lg-4 mb-4">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm hover-shadow">
               <div class="card-header bg-info text-white">
                 <h5 class="mb-0"><i class="bi bi-award"></i> Brand Information</h5>
               </div>
@@ -42,7 +23,7 @@
                     <img src="{{ asset('storage/' . $brands->image) }}" 
                          alt="{{ $brands->name }}"
                          class="img-fluid rounded"
-                         style="max-height: 300px;">
+                         style="max-height: 300px;" loading="lazy">
                   </div>
                 @else
                   <div class="text-center mb-3 p-4 bg-light rounded">
@@ -93,12 +74,12 @@
                     @foreach($brands->products as $product)
                     @if($product->status == "published" && $product->stock > 0)
                     <div class="col-12 col-md-6 col-lg-4 mb-3">
-                      <div class="card h-100">
-                        @if($product->main_image)
-                          <img src="{{ asset('storage/' . $product->main_image) }}" 
-                               alt="{{ $product->name }}"
-                               class="card-img-top"
-                               style="height: 150px; object-fit: cover;">
+                      <div class="card h-100 hover-shadow">
+           @if($product->main_image)
+           <img src="{{ asset('storage/' . $product->main_image) }}" 
+             alt="{{ $product->name }}"
+             class="card-img-top"
+             style="height: 150px; object-fit: cover;" loading="lazy">
                         @else
                           <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
                             <i class="bi bi-box-seam text-muted"></i>

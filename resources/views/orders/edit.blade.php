@@ -34,7 +34,7 @@
 
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card">
+            <div class="card hover-shadow">
                 <div class="card-header bg-warning text-dark">
                     <h5 class="mb-0">
                         <i class="bi bi-receipt-cutoff"></i> 
@@ -157,7 +157,7 @@
             </div>
 
             <!-- Order Items Preview -->
-            <div class="card mt-4">
+            <div class="card mt-4 hover-shadow">
                 <div class="card-header bg-light">
                     <h6 class="mb-0"><i class="bi bi-bag-check"></i> Current Order Items ({{ $order->orderItems->count() }} items)</h6>
                 </div>
@@ -167,7 +167,7 @@
                         <div class="col-md-6 mb-2">
                             <div class="d-flex align-items-center">
                                 @if(optional($item->product)->main_image)
-                                    <img src="{{ asset('storage/' . $item->product->main_image) }}" alt="{{ $item->product_name }}" class="me-2 rounded" style="width:40px;height:40px;object-fit:cover;">
+                                    <img src="{{ asset('storage/' . $item->product->main_image) }}" alt="{{ $item->product_name }}" class="me-2 rounded" style="width:40px;height:40px;object-fit:cover;" loading="lazy">
                                 @else
                                     <div class="me-2 bg-light rounded d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
                                         <i class="bi bi-image text-muted"></i>

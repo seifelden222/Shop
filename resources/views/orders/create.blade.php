@@ -3,7 +3,7 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card">
+            <div class="card hover-shadow">
                 <div class="card-header">
                     <h4 class="mb-0"><i class="bi bi-credit-card"></i> Checkout</h4>
                 </div>
@@ -152,10 +152,10 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                @if($item['image'])
-                                                    <img src="{{ asset('storage/' . $item['image']) }}" 
-                                                         alt="{{ $item['product_name'] }}" 
-                                                         class="me-2 rounded" style="width: 40px; height: 40px; object-fit: cover;">
+                                          @if($item['image'])
+                                          <img src="{{ asset('storage/' . $item['image']) }}" 
+                                              alt="{{ $item['product_name'] }}" 
+                                              class="me-2 rounded" style="width: 40px; height: 40px; object-fit: cover;" loading="lazy">
                                                 @endif
                                                 {{ $item['product_name'] }}
                                             </div>
