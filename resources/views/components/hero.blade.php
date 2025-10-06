@@ -50,6 +50,12 @@
                 results.classList.remove('d-none');
               }
 
+              function showNotFound(){
+                results.innerHTML = '<div class="p-2 text-center text-muted">\n  <div class="mb-1"><i class="bi bi-search" style="font-size:1.2rem"></i></div>\n  <div>No results found</div>\n</div>';
+                results.classList.remove('d-none');
+                positionResults();
+              }
+
               function positionResults(){
                 // Position the dropdown directly under the search input and match its width
                 // Use offset values relative to the form container
@@ -92,6 +98,9 @@
                   if (data.html) {
                     history.replaceState({}, '', form.action + '?q=' + encodeURIComponent(input.value));
                     showResults(data.html);
+                  } else {
+                    // show not found message instead of hiding
+                    showNotFound();
                   }
                 }).catch(()=>{ window.location = form.action + '?q=' + encodeURIComponent(input.value); });
               });
@@ -107,8 +116,8 @@
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                   }).then(r => r.json()).then(data => {
                     if (data.html) showResults(data.html);
-                    else hideResults();
-                  }).catch(()=> hideResults());
+                    else showNotFound();
+                  }).catch(()=> showNotFound());
                 }, 300);
               });
 
@@ -163,6 +172,8 @@
           /* reduce font-size inside dropdown for compactness */
           .ajax-search-dropdown .list-group-item strong{ font-size: .95rem; }
           .ajax-search-dropdown h6{ margin:0 0 .4rem 0; font-size: .9rem; }
+          /* not-found styling */
+          .ajax-search-dropdown .no-results { padding: .75rem; color: #6c757d; }
         </style>
         @endpush
 
