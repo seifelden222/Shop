@@ -100,8 +100,16 @@
               <div class="position-relative">
                 @if($product->main_image)
                   <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->name }}" class="card-img-top" style="height:220px; object-fit:cover;">
+                  <div class="position-absolute top-0 end-0 m-2" style="z-index: 15;">
+                    @include('components.favorite-button', ['productId' => $product->id])
+                  </div>
                 @else
-                  <div class="bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style="height:220px;"><i class="bi bi-box-seam fs-1 text-muted"></i></div>
+                  <div class="bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center position-relative" style="height:220px;">
+                    <i class="bi bi-box-seam fs-1 text-muted"></i>
+                    <div class="position-absolute top-0 end-0 m-2" style="z-index:15;">
+                      @include('components.favorite-button', ['productId' => $product->id])
+                    </div>
+                  </div>
                 @endif
                 @if($product->sale_price ?? false)
                   <span class="badge bg-danger position-absolute top-0 start-0 m-2">Sale</span>

@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SearchController;
@@ -47,5 +48,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/quick-add', [CartController::class, 'quickAdd'])->name('cart.quick-add'); 
     
-    // Brand total products route
+    //favorite routes
+    // Index (list) — serve at /favorites (GET) and name it favorites.index so controller redirects work
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{favoriteId}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+
 });

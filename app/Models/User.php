@@ -72,4 +72,9 @@ class User extends Authenticatable
             ->whereNull('order_id')
             ->sum('quantity') ?? 0;
     }
+
+public function favourt(){
+    return $this->hasMany(Favorite::class);
+}
+
 }

@@ -24,8 +24,27 @@ class ProductFactory extends Factory
             'Smart TV', 'Gaming Console', 'VR Headset', 'Drone Camera'
         ];
 
-        $price = $this->faker->randomFloat(2, 10, 999);
-        $name = $this->faker->randomElement($productNames);
+        $faker = $this->faker;
+
+ 
+
+        if ($faker) {
+            $price = $faker->randomFloat(2, 10, 999);
+            $name = $faker->randomElement($productNames);
+            $description = $faker->paragraphs(rand(1, 3), true);
+            $stock = $faker->numberBetween(0, 100);
+            $status = $faker->randomElement(['published', 'published', 'published', 'archived', 'block']);
+            $published_at = $faker->optional(0.9)->dateTimeBetween('-1 year', 'now');
+            $created_at = $faker->dateTimeBetween('-6 months', 'now');
+        } else {
+            $price = (float) number_format(rand(1000, 99900) / 100, 2);
+            $name = $productNames[array_rand($productNames)];
+            $description = 'Description for ' . $name;
+            $stock = rand(0, 100);
+            $status = 'published';
+            $published_at = now();
+            $created_at = now();
+        }
 
         return [
             'category_id' => function () {
@@ -41,15 +60,15 @@ class ProductFactory extends Factory
                 return $brand?->name ?? 'Generic Brand';
             },
             'name' => $name,
-            'description' => $this->faker->paragraphs(rand(1, 3), true),
+            'description' => $description,
             'price' => $price,
-            'stock' => $this->faker->numberBetween(0, 100),
+            'stock' => $stock,
             'main_image' => null,
             'images' => null,
-            'status' => $this->faker->randomElement(['published', 'published', 'published', 'archived', 'block']), // More published
-            'published_at' => $this->faker->optional(0.9)->dateTimeBetween('-1 year', 'now'),
+            'status' => $status,
+            'published_at' => $published_at,
             'name_snapshot' => $name,
-            'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
+            'created_at' => $created_at,
             'updated_at' => now(),
         ];
     }

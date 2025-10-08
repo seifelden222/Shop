@@ -26,17 +26,35 @@
       <div class="col-12 col-md-4 mb-4">
 
         <div class="card h-100 shadow-sm hover-shadow">
-          @if($product->main_image)
-          <img
-            src="{{ asset('storage/' . $product->main_image) }}"
-            alt="{{ $product->name }}"
-            class="card-img-top"
-            style="height: 200px; object-fit: cover;" loading="lazy" />
-          @else
-          <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-            <i class="bi bi-box-seam fs-1 text-muted"></i>
+          <div class="position-relative">
+            @if($product->main_image)
+            <img
+              src="{{ asset('storage/' . $product->main_image) }}"
+              alt="{{ $product->name }}"
+              class="card-img-top"
+              style="height: 200px; object-fit: cover;" loading="lazy" />
+            @else
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+              <i class="bi bi-box-seam fs-1 text-muted"></i>
+            </div>
+            @endif
+
+            <div class="position-absolute top-0 end-0 m-2" style="z-index: 15;">
+              @auth
+                <form method="POST" action="{{ route('favorites.store') }}">
+                  @csrf
+                  <input type="hidden" name="product_id" value="{{ $product->id }}">
+                  <button type="submit" class="btn btn-sm btn-light rounded-circle shadow-lg border-2 border-danger" title="Add to favorites" style="width: 40px; height: 40px; background-color: white !important;">
+                    <i class="bi bi-heart-fill text-danger"></i>
+                  </button>
+                </form>
+              @else
+                <a href="{{ route('login') }}" class="btn btn-sm btn-light rounded-circle shadow-lg border-2 border-danger" title="Login to add to favorites" style="width: 40px; height: 40px; background-color: white !important; text-decoration: none;">
+                  <i class="bi bi-heart-fill text-danger"></i>
+                </a>
+              @endauth
+            </div>
           </div>
-          @endif
 
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ $product->name }}</h5>

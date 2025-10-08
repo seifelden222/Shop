@@ -6,27 +6,33 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
     public function index()
     {
         try {
-            // Get latest 6 products for featured section
-            $featuredProducts = Product::with('category')
+            // Get latest 8 products for featured section with better filtering
+            $featuredProducts = Product::with(['category', 'brand'])
                 ->where('status', 'published')
+                ->where('stock', '>', 0)
                 ->latest()
-                ->take(6)
+                ->take(8)
                 ->get();
 
-            // Get all categories for category section
+            // Get active categories with products count
             $categories = Category::where('is_active', true)
+                ->withCount(['products' => function ($query) {
+                    $query->where('status', 'published')->where('stock', '>', 0);
+                }])
+                ->orderBy('products_count', 'desc')
                 ->take(6)
                 ->get();
 
             // Get some stats for display
             $stats = [
-                'total_products' => Product::where('status', 'published')->count(),
+                'total_products' => Product::where('status', 'published')->where('stock', '>', 0)->count(),
                 'total_categories' => Category::where('is_active', true)->count(),
                 'total_brands' => Brand::where('is_active', true)->count(),
             ];
@@ -34,6 +40,9 @@ class HomeController extends Controller
             return view('welcome', compact('featuredProducts', 'categories', 'stats'));
             
         } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('HomeController error: ' . $e->getMessage());
+            
             // If there's an error, return view with empty data
             $featuredProducts = collect();
             $categories = collect();

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 @section('content')
-@include('components.hero', [
+<!-- @include('components.hero', [
   'title' => $products->name,
   'subtitle' => $products->description ?? 'No description available.',
   'primaryLabel' => 'Back to Products',
   'primaryLink' => route('products.index'),
   'secondaryLabel' => auth()->check() && auth()->user()->role === 'admin' ? 'Edit Product' : null,
   'secondaryLink' => auth()->check() && auth()->user()->role === 'admin' ? route('products.edit', $products) : null,
-])
+]) -->
 
 <section aria-label="Product Details">
   <div class="container py-4">
@@ -19,16 +19,35 @@
           </div>
           <div class="card-body">
             @if($products->main_image)
-            <div class="text-center mb-3">
+            <div class="text-center mb-3 position-relative">
               <img src="{{ asset('storage/' . $products->main_image) }}"
                 alt="{{ $products->name }}"
                 class="img-fluid rounded"
                 style="max-height: 300px;" loading="lazy">
+
+              <div class="position-absolute top-0 end-0 m-3" style="z-index: 15;">
+                @auth
+                  <form method="POST" action="{{ route('favorites.store') }}">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $products->id }}">
+                    <button type="submit" class="btn btn-sm btn-light rounded-circle shadow-lg border-2 border-danger" title="Add to favorites" style="width: 45px; height: 45px; background-color: white !important;">
+                      <i class="bi bi-heart-fill text-danger fs-5"></i>
+                    </button>
+                  </form>
+                @else
+                  <a href="{{ route('login') }}" class="btn btn-sm btn-light rounded-circle shadow-lg border-2 border-danger" title="Login to add to favorites" style="width: 45px; height: 45px; background-color: white !important; text-decoration: none;">
+                    <i class="bi bi-heart-fill text-danger fs-5"></i>
+                  </a>
+                @endauth
+              </div>
             </div>
             @else
-            <div class="text-center mb-3 p-4 bg-light rounded">
+            <div class="text-center mb-3 p-4 bg-light rounded position-relative">
               <i class="bi bi-box-seam fs-1 text-muted"></i>
               <p class="text-muted mt-2">No image available</p>
+              <div class="position-absolute top-0 end-0 m-3" style="z-index:15;">
+                @include('components.favorite-button', ['productId' => $products->id])
+              </div>
             </div>
             @endif
 
@@ -136,24 +155,59 @@
               </div>
             </div>
 
-            @if($products->category && $products->category->products->count() > 1)
+            @php
+              // Be defensive: category or its products may be null or throw when accessed.
+              $category = $products->category ?? null;
+              $relatedProducts = collect();
+
+              if ($category) {
+                  try {
+                      $relatedProducts = $category->products->filter(function($rp) use ($products) {
+                          return $rp->id !== $products->id && ($rp->status ?? null) == 'published' && ($rp->stock ?? 0) > 0;
+                      })->take(4);
+                  } catch (\Exception $e) {
+                      // If anything goes wrong getting related products, fall back to empty collection
+                      $relatedProducts = collect();
+                  }
+              }
+            @endphp
+
+            @if($relatedProducts->count() > 0)
             <hr>
-            <h6><i class="bi bi-collection"></i> Related Products in {{ $products->category->name }}</h6>
+            <h6><i class="bi bi-collection"></i> Related Products in {{ $category?->name ?? 'Category' }}</h6>
             <div class="row">
-              @foreach($products->category->products->take(4) as $relatedProduct)
-              @if($relatedProduct->id !== $products->id && $relatedProduct->status == "published" && $relatedProduct->stock > 0)
+              @foreach($relatedProducts as $relatedProduct)
+              @if($relatedProduct)
               <div class="col-6 col-md-3 mb-3">
                 <div class="card h-100 hover-shadow">
                       @if($relatedProduct->main_image)
-                      <img src="{{ asset('storage/' . $relatedProduct->main_image) }}"
-                        alt="{{ $relatedProduct->name }}"
-                        class="card-img-top"
-                        style="height: 120px; object-fit: cover;" loading="lazy">
-                  @else
-                  <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 120px;">
-                    <i class="bi bi-box-seam text-muted"></i>
-                  </div>
-                  @endif
+                      <div class="position-relative">
+                        <img src="{{ asset('storage/' . $relatedProduct->main_image) }}"
+                          alt="{{ $relatedProduct->name }}"
+                          class="card-img-top"
+                          style="height: 120px; object-fit: cover;" loading="lazy">
+
+                        <div class="position-absolute top-0 end-0 m-2" style="z-index: 15;">
+                          @auth
+                            <form method="POST" action="{{ route('favorites.store') }}">
+                              @csrf
+                              <input type="hidden" name="product_id" value="{{ $relatedProduct->id }}">
+                              <button type="submit" class="btn btn-sm btn-light rounded-circle shadow-lg border-2 border-danger" title="Add to favorites" style="width: 35px; height: 35px; background-color: white !important;">
+                                <i class="bi bi-heart-fill text-danger"></i>
+                              </button>
+                            </form>
+                          @else
+                            <a href="{{ route('login') }}" class="btn btn-sm btn-light rounded-circle shadow-lg border-2 border-danger" title="Login to add to favorites" style="width: 35px; height: 35px; background-color: white !important; text-decoration: none;">
+                              <i class="bi bi-heart-fill text-danger"></i>
+                            </a>
+                          @endauth
+                        </div>
+                      </div>
+                      @else
+                      <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 120px;">
+                        <i class="bi bi-box-seam text-muted"></i>
+                      </div>
+                      @endif
 
                   <div class="card-body p-2">
                     <h6 class="card-title small">{{ Str::limit($relatedProduct->name, 30) }}</h6>

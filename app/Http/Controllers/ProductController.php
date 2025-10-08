@@ -6,6 +6,7 @@ use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -63,6 +64,12 @@ class ProductController extends Controller
             $products = Product::findOrFail($id);
             return view('products.show', compact('products'));
         } catch (\Exception $e) {
+            // Log the exception so we can inspect the real cause in storage/logs/laravel.log
+            Log::error('ProductController@show exception: ' . $e->getMessage(), [
+                'id' => $id,
+                'exception' => (string) $e,
+            ]);
+
             return redirect()->back()->with('error', 'An error occurred while fetching the product details.');
         }
     }

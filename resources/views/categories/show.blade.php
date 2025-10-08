@@ -75,16 +75,23 @@
                     @if($product->status == "published" && $product->stock > 0)
                     <div class="col-12 col-md-6 col-lg-4 mb-3">
                       <div class="card h-100 hover-shadow">
-           @if($product->main_image)
-           <img src="{{ asset('storage/' . $product->main_image) }}" 
-             alt="{{ $product->name }}"
-             class="card-img-top"
-             style="height: 150px; object-fit: cover;" loading="lazy">
-                        @else
-                          <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
-                            <i class="bi bi-image text-muted"></i>
+                        <div class="position-relative">
+                          @if($product->main_image)
+                            <img src="{{ asset('storage/' . $product->main_image) }}" 
+                              alt="{{ $product->name }}"
+                              class="card-img-top"
+                              style="height: 150px; object-fit: cover;" loading="lazy">
+                          @else
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                              <i class="bi bi-image text-muted"></i>
+                            </div>
+                          @endif
+                          
+                          <!-- Favorite button - always visible -->
+                          <div class="position-absolute top-0 end-0 m-2" style="z-index: 15;">
+                            @include('components.favorite-button', ['productId' => $product->id])
                           </div>
-                        @endif
+                        </div>
                         
                         <div class="card-body d-flex flex-column">
                           <h6 class="card-title">{{ $product->name }}</h6>
