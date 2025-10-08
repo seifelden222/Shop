@@ -27,16 +27,21 @@
       @if($category->is_active)
       <div class="col-12 col-md-4 mb-4">
         <div class="card h-100 shadow-sm hover-shadow">
-          @if($category->main_image)
+          @if($category->image && file_exists(storage_path('app/public/' . $category->image)))
           <img
-            src="{{ asset('storage/' . $category->main_image) }}"
+            src="{{ asset('storage/' . $category->image) }}"
             alt="{{ $category->name }}"
             class="card-img-top"
-            style="height: 200px; object-fit: cover;" loading="lazy" />
+            style="height: 200px; object-fit: cover;" 
+            loading="lazy"
+            onerror="this.src='https://via.placeholder.com/400x200/6c757d/ffffff?text={{ urlencode($category->name) }}'" />
           @else
-          <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-            <i class="bi bi-image fs-1 text-muted"></i>
-          </div>
+          <img
+            src="https://via.placeholder.com/400x200/{{ substr(md5($category->name), 0, 6) }}/ffffff?text={{ urlencode($category->name) }}"
+            alt="{{ $category->name }}"
+            class="card-img-top"
+            style="height: 200px; object-fit: cover;" 
+            loading="lazy" />
           @endif
 
           <div class="card-body d-flex flex-column">

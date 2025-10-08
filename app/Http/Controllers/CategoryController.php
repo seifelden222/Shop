@@ -42,10 +42,13 @@ class CategoryController extends Controller
     {
         try {
             $validated = $request->validated();
-            if ($request->hasFile('main_image')) {
-                $img_name = time() . '_' . $request->file('main_image')->getClientOriginalName();
-                $path = $request->file('main_image')->store('categories', 'public');
-                $validated['main_image'] = $path;
+         
+             if ($request->hasFile('image') || $request->hasFile('main_image')) {
+                // accept either 'image' or legacy 'main_image' from forms
+                $fileKey = $request->hasFile('image') ? 'image' : 'main_image';
+                $path = $request->file($fileKey)->store('categories', 'public');
+                // save to DB column 'image'
+                $validated['image'] = $path;
             }
             Category::create($validated);
             return redirect()->route('categories.index')->with('success', 'Category created successfully.');
@@ -82,13 +85,15 @@ class CategoryController extends Controller
     {
         try {
             $validated = $request->validated();
-            if ($request->hasFile('main_image')) {
-                if ($category->main_image && Storage::disk('public')->exists($category->main_image)) {
-                    Storage::disk('public')->delete($category->main_image);
+                  if ($request->hasFile('image') || $request->hasFile('main_image')) {
+                $fileKey = $request->hasFile('image') ? 'image' : 'main_image';
+                // delete old image if exists in the 'image' column
+                if ($category->image && Storage::disk('public')->exists($category->image)) {
+                    Storage::disk('public')->delete($category->image);
                 }
-                $img_name = time() . '_' . $request->file('main_image')->getClientOriginalName();
-                $path = $request->file('main_image')->store('categories', 'public');
-                $validated['main_image'] = $path;
+                $path = $request->file($fileKey)->store('categories', 'public');
+                
+                $validated['image'] = $path;
             }
             $category->update($validated);
             return redirect()->route('categories.index')->with('success', 'Category updated successfully.');

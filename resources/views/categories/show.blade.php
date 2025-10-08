@@ -18,16 +18,17 @@
                 <h5 class="mb-0"><i class="bi bi-info-circle"></i> Category Information</h5>
               </div>
               <div class="card-body">
-                @if($category->main_image)
+                @if($category->image && file_exists(storage_path('app/public/' . $category->image)))
                   <div class="text-center mb-3">
-                    <img src="{{ asset('storage/' . $category->main_image) }}" 
+                    <img src="{{ asset('storage/' . $category->image) }}"
                          alt="{{ $category->name }}"
                          class="img-fluid rounded"
-                         style="max-height: 300px;" loading="lazy">
+                         style="max-height: 300px;" loading="lazy"
+                         onerror="this.src='https://via.placeholder.com/600x300/6c757d/ffffff?text={{ urlencode($category->name) }}'">
                   </div>
                 @else
                   <div class="text-center mb-3 p-4 bg-light rounded">
-                    <i class="bi bi-image fs-1 text-muted"></i>
+                    <img src="https://via.placeholder.com/600x300/6c757d/ffffff?text={{ urlencode($category->name) }}" alt="No image" class="img-fluid rounded">
                     <p class="text-muted mt-2">No image available</p>
                   </div>
                 @endif

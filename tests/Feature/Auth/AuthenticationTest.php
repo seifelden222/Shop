@@ -21,10 +21,12 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
+        $response = $this->withSession(['_token' => 'test-token'])
+            ->post('/login', [
+                'email' => $user->email,
+                'password' => 'password',
+                '_token' => 'test-token',
+            ]);
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));

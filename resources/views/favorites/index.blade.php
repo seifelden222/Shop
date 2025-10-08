@@ -4,11 +4,11 @@
 <section aria-label="Favorites">
   <div class="container py-4">
     <div class="row mb-3 align-items-center">
-      <!-- <div class="col-6">
+      <div class="col-6">
         <h2><i class="bi bi-heart-fill text-danger"></i> My Favorites</h2>
         <small class="text-muted">Saved items (latest first)</small>
-      </div> -->
-      <div class="col-6 text-end mt-5 pt-5">
+      </div>
+      <div class="col-6 text-end">
         @if($favorite->count())
           <form method="POST" action="{{ route('favorites.destroy', 'all') }}" class="d-inline">
             @csrf

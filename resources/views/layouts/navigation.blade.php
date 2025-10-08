@@ -19,17 +19,14 @@
          <li class="nav-item px-2">
            <a class="nav-link" href="{{ route('contact') }}">Contact</a>
          </li>
-         @if (\App\Models\Order::count() > 0)
-         
+         @auth
          <li class="nav-item px-2">
            <a class="nav-link" href="{{ route('orders.index') }}">Orders</a>
-          </li>
-          @endif
-          @if (\App\Models\Favorite::count() > 0)
-          <li class="nav-item px-2">
-            <a class="nav-link" href="{{ route('favorites.index') }}">Favorite</a>
-          </li>
-          @endif
+         </li>
+         <li class="nav-item px-2">
+           <a class="nav-link" href="{{ route('favorites.index') }}">Favorite</a>
+         </li>
+         @endauth
        </ul>
      </div>
      <?php
