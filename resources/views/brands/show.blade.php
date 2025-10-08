@@ -1,13 +1,13 @@
 @extends('layouts.app')
 @section('content')
-@include('components.hero', [
+<!-- @include('components.hero', [
   'title' => $brands->name,
   'subtitle' => $brands->description ?? 'No description available.',
   'primaryLabel' => 'Back to Brands',
   'primaryLink' => route('brands.index'),
   'secondaryLabel' => auth()->check() && auth()->user()->role === 'admin' ? 'Edit Brand' : null,
   'secondaryLink' => auth()->check() && auth()->user()->role === 'admin' ? route('brands.edit', $brands) : null,
-])
+]) -->
 
 <section aria-label="Brand Details">
       <div class="container py-4">

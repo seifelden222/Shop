@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -16,8 +17,12 @@ class ProductController extends Controller
     public function index()
     {
         try{
-
-            $products = Product::orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+            $query = Product::orderBy('created_at', 'desc');
+            $user = Auth::user();
+            if ($user && ! $user->isAdmin()) {
+                $query->where('user_id', $user->id);
+            }
+            $products = $query->paginate(15)->withQueryString();
             return view('products.index', compact('products'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while fetching products.');
@@ -30,6 +35,7 @@ class ProductController extends Controller
     public function create()
     {
         try {
+            $this->authorize('create', Product::class);
             return view('products.create');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while loading the create product form.');
@@ -42,7 +48,13 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         try {
+            // ProductRequest already authorizes, but double-check here for safety
+            $this->authorize('create', Product::class);
             $validated = $request->validated();
+            $user = auth()->user();
+            if ($user) {
+                $validated['user_id'] = $user->id;
+            }
             if ($request->hasFile('main_image')) {
                 $img_name = time() . '_' . $request->file('main_image')->getClientOriginalName();
                 $path = $request->file('main_image')->store('products', 'public');
@@ -62,6 +74,7 @@ class ProductController extends Controller
     {
         try {
             $products = Product::findOrFail($id);
+            $this->authorize('view', $products);
             return view('products.show', compact('products'));
         } catch (\Exception $e) {
             // Log the exception so we can inspect the real cause in storage/logs/laravel.log
@@ -82,6 +95,7 @@ class ProductController extends Controller
         try{
 
             $products = Product::findOrFail($id);
+            $this->authorize('update', $products);
             return view('products.edit', compact('products'));
         }catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while loading the edit product form.');
@@ -94,6 +108,7 @@ class ProductController extends Controller
     public function update(ProductRequest $request, Product $product)
     {
         try {
+            $this->authorize('update', $product);
             $validated = $request->validated();
             if ($request->hasFile('main_image')) {
                 if($product->main_image && Storage::disk('public')->exists($product->main_image)) {
@@ -117,6 +132,7 @@ class ProductController extends Controller
     {
         try {
             $products = Product::findOrFail($id);
+            $this->authorize('delete', $products);
             $products->delete();
             return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
         } catch (\Exception $e) {

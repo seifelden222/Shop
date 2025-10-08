@@ -1,13 +1,13 @@
 @extends('layouts.app')
 @section('content')
-@include('components.hero', [
+<!-- @include('components.hero', [
   'title' => 'Browse All Brands',
   'subtitle' => 'Discover our partner brands and their products.',
   'primaryLabel' => 'Add New Brand',
   'primaryLink' => route('brands.create'),
   'secondaryLabel' => 'View All',
   'secondaryLink' => route('brands.index'),
-])
+]) -->
 
 <section aria-label="Brands List">
       <div class="container py-4">

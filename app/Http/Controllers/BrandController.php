@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class BrandController extends Controller
 {
@@ -17,7 +18,12 @@ class BrandController extends Controller
     {
         try {
 
-            $brands = Brand::orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+            $query = Brand::orderBy('created_at', 'desc');
+            $user = Auth::user();
+            if ($user && ! $user->isAdmin()) {
+                $query->where('user_id', $user->id);
+            }
+            $brands = $query->paginate(16)->withQueryString();
             return view('brands.index', compact('brands'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while fetching brands.');
@@ -30,6 +36,7 @@ class BrandController extends Controller
     public function create()
     {
         try {
+            $this->authorize('create', Brand::class);
             return view('brands.create');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while loading the create brand form.');
@@ -42,7 +49,12 @@ class BrandController extends Controller
     public function store(BrandRequest $request)
     {
         try {
+            $this->authorize('create', Brand::class);
             $validated = $request->validated();
+            $user = Auth::user();
+            if ($user) {
+                $validated['user_id'] = $user->id;
+            }
             if ($request->hasFile('image')) {
                 $img_name = time() . '_' . $request->file('image')->getClientOriginalName();
                 $path = $request->file('image')->store('brands', 'public');
@@ -62,6 +74,7 @@ class BrandController extends Controller
     {
         try {
             $brands = Brand::findOrFail($id);
+            $this->authorize('view', $brands);
             return view('brands.show', compact('brands'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while fetching the brands details.');
@@ -76,6 +89,7 @@ class BrandController extends Controller
         try {
 
             $brands = Brand::findOrFail($id);
+            $this->authorize('update', $brands);
             return view('brands.edit', compact('brands'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while loading the edit brands form.');
@@ -88,6 +102,7 @@ class BrandController extends Controller
     public function update(BrandRequest $request, Brand $brands)
     {
         try {
+            $this->authorize('update', $brands);
             $validated = $request->validated();
             if ($request->hasFile('image')) {
                 if ($brands->image && Storage::disk('public')->exists($brands->image)) {
@@ -111,6 +126,7 @@ class BrandController extends Controller
     {
         try {
             $brands = Brand::findOrFail($id);
+            $this->authorize('delete', $brands);
             $brands->delete();
             return redirect()->route('brands.index')->with('success', 'brands deleted successfully.');
         } catch (\Exception $e) {

@@ -6,6 +6,7 @@ use App\Http\Requests\CategorieRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -16,7 +17,12 @@ class CategoryController extends Controller
     {
         try {
 
-            $categories = Category::orderBy('created_at', 'desc')->paginate(10);
+            $query = Category::orderBy('created_at', 'desc');
+            $user = Auth::user();
+            if ($user && ! $user->isAdmin()) {
+                $query->where('user_id', $user->id);
+            }
+            $categories = $query->paginate(10);
             return view('categories.index', compact('categories'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while fetching categories.');
@@ -29,6 +35,7 @@ class CategoryController extends Controller
     public function create()
     {
         try {
+            $this->authorize('create', Category::class);
             return view('categories.create');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while loading the create category form.');
@@ -41,7 +48,12 @@ class CategoryController extends Controller
     public function store(CategorieRequest $request)
     {
         try {
+            $this->authorize('create', Category::class);
             $validated = $request->validated();
+            $user = Auth::user();
+            if ($user) {
+                $validated['user_id'] = $user->id;
+            }
          
              if ($request->hasFile('image') || $request->hasFile('main_image')) {
                 // accept either 'image' or legacy 'main_image' from forms
@@ -64,6 +76,7 @@ class CategoryController extends Controller
     {
         try {
             $category = Category::findOrFail($category->id);
+            $this->authorize('view', $category);
             return view('categories.show', compact('category'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while fetching the category details.');
@@ -75,6 +88,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        $this->authorize('update', $category);
         return view('categories.edit', compact('category'));
     }
 
@@ -84,6 +98,7 @@ class CategoryController extends Controller
     public function update(CategorieRequest $request, Category $category)
     {
         try {
+            $this->authorize('update', $category);
             $validated = $request->validated();
                   if ($request->hasFile('image') || $request->hasFile('main_image')) {
                 $fileKey = $request->hasFile('image') ? 'image' : 'main_image';
@@ -109,6 +124,7 @@ class CategoryController extends Controller
     {
         try {
             $category = Category::findOrFail($category->id);
+            $this->authorize('delete', $category);
             $category->delete();
             return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
         } catch (\Exception $e) {

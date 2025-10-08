@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Brand;
 
 class BrandRequest extends FormRequest
 {
@@ -11,7 +12,28 @@ class BrandRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        if (! $user) {
+            return false;
+        }
+
+        if ($this->isMethod('post')) {
+            return $user->can('create', Brand::class);
+        }
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $routeModel = $this->route('brands') ?? $this->route('brand') ?? $this->route('id');
+            if ($routeModel instanceof Brand) {
+                return $user->can('update', $routeModel);
+            }
+            if (is_numeric($routeModel) || is_string($routeModel)) {
+                $model = Brand::find($routeModel);
+                return $model ? $user->can('update', $model) : false;
+            }
+            return false;
+        }
+
+        return false;
     }
 
     /**

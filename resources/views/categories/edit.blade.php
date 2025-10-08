@@ -1,13 +1,13 @@
 @extends('layouts.app')
 @section('content')
-@include('components.hero', [
+<!-- @include('components.hero', [
   'title' => 'Edit Category: ' . $category->name,
   'subtitle' => 'Update category information and settings.',
   'primaryLabel' => 'Back to Categories',
   'primaryLink' => route('categories.index'),
   'secondaryLabel' => 'View Category',
   'secondaryLink' => route('categories.show', $category),
-])
+]) -->
 
 <section aria-label="Edit Category Form">
       <div class="container py-4">

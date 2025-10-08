@@ -1,13 +1,13 @@
 @extends('layouts.app')
 @section('content')
-@include('components.hero', [
+<!-- @include('components.hero', [
   'title' => 'Browse All Categories',
   'subtitle' => 'Discover our wide range of product categories.',
   'primaryLabel' => 'Add New Category',
   'primaryLink' => route('categories.create'),
   'secondaryLabel' => 'View All',
   'secondaryLink' => route('categories.index'),
-])
+]) -->
 
 <section aria-label="Categories List">
   <div class="container py-4">

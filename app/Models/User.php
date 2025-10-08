@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -76,5 +77,13 @@ class User extends Authenticatable
 public function favourt(){
     return $this->hasMany(Favorite::class);
 }
+
+    /**
+     * Check if user is admin or super_admin
+     */
+    public function isAdmin(): bool
+    {
+        return in_array($this->role, ['admin', 'super_admin'], true);
+    }
 
 }

@@ -22,7 +22,12 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('orderItems.product')->get();
+        $user = auth()->user();
+        $query = Order::with('orderItems.product');
+        if ($user && ! $user->isAdmin()) {
+            $query->where('user_id', $user->id);
+        }
+        $orders = $query->get();
         if ($orders->isEmpty()) return redirect()->back()->with('error', 'No orders found.');
 
         return view('orders.index', compact('orders'));
@@ -100,6 +105,7 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::with('orderItems.product')->findOrFail($id);
+        $this->authorize('view', $order);
         return view('orders.show', compact('order'));
     }
 
