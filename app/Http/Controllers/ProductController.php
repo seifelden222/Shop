@@ -47,7 +47,7 @@ class ProductController extends Controller
             // ProductRequest already authorizes, but double-check here for safety
             $this->authorize('create', Product::class);
             $validated = $request->validated();
-            $user = auth()->user();
+            $user = Auth::user();
             if ($user) {
                 $validated['user_id'] = $user->id;
             }

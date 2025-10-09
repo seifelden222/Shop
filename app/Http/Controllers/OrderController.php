@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate as GateFacade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
@@ -22,10 +23,18 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $user = auth()->user(); 
+        $user = Auth::user();
+
         $query = Order::with('orderItems.product');
-        if ($user && ! $user->isAdmin()) {
-            $query->where('user_id', $user->id);
+        // Use Gate so we don't depend on a particular method existing on the User model.
+        // If the current user is not allowed to manage the shop, show only their orders.
+    if (! GateFacade::allows('manage-shop')) {
+            if (Auth::check()) {
+                $query->where('user_id', Auth::id());
+            } else {
+                // No authenticated user — ensure query returns no results to avoid leaking data.
+                $query->whereRaw('0 = 1');
+            }
         }
         $orders = $query->get();
         if ($orders->isEmpty()) return redirect()->back()->with('error', 'No orders found.');
@@ -158,7 +167,7 @@ class OrderController extends Controller
                     $totalAmount += $totalPrice;
                 }
 
-                $shipping_cost = $validated['shipping_cost'] ?? 0.0;
+                $shipping_cost = isset($validated['shipping_cost']) ? (float) $validated['shipping_cost'] : 0.0;
                 $order->total_price = $totalAmount + $shipping_cost;
                 $order->save();
 

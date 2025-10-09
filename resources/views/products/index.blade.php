@@ -14,13 +14,11 @@
     <div class="row">
       <div class="col-12 mb-3">
         <h2 class="text-center">Product Inventory</h2>
-          @if(Auth::check() && Auth::user()->role === 'admin')
         <div class="text-center">
           <a href="{{ route('products.create') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Add New Product
           </a>
         </div>
-        @endif
       </div>
 
       @forelse($products as $product)
