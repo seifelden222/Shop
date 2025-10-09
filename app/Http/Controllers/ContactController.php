@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendContactMail;
 use App\Mail\ContactFormMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -42,14 +43,13 @@ class ContactController extends Controller
             return redirect()->route('contact')->with('success', 'Thank you — your message was received.');
         }
 
-        // Send email to site developer or configured contact
+        // Dispatch email sending to the queue for better performance
         $to = config('site.developer.email', env('MAIL_TO_ADDRESS', null));
         if ($to) {
             try {
-                Mail::to($to)->send(new ContactFormMail($data));
+                SendContactMail::dispatch($data);
             } catch (\Exception $e) {
-                logger()->error('Contact mail sending failed', ['error' => $e->getMessage(), 'data' => $data]);
-                // fallthrough to success message (do not expose internal error to user)
+                logger()->error('Dispatching SendContactMail failed', ['error' => $e->getMessage(), 'data' => $data]);
             }
         } else {
             // If no mail configured, store or log the message safely
