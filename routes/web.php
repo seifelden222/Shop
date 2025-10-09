@@ -36,9 +36,17 @@ require __DIR__ . '/auth.php';
 
 
 
+// Legacy path redirect: prevent /products/mine being captured by the products.show resource
+Route::get('/products/mine', function () {
+    return redirect()->route('products.mine');
+});
+
 Route::resource('products', ProductController::class);
 Route::resource('brands', BrandController::class);
 Route::resource('categories', CategoryController::class);
+
+// My Products - products created by the authenticated user
+Route::middleware('auth')->get('/my-products', [ProductController::class, 'mine'])->name('products.mine');
 
 // Search route (site-wide)
 Route::get('/search', [SearchController::class, 'search'])->name('search');

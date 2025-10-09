@@ -26,6 +26,24 @@ class ProductController extends Controller
     }
 
     /**
+     * Display a listing of the authenticated user's products.
+     */
+    public function mine()
+    {
+        try {
+            $user = Auth::user();
+            if (! $user) return redirect()->route('welcome')->with('error', 'You must be logged in to view your products.');
+
+            $query = Product::where('user_id', $user->id)->orderBy('created_at', 'desc');
+            $products = $query->paginate(15)->withQueryString();
+            return view('products.mine', compact('products'));
+        } catch (\Exception $e) {
+            Log::error('ProductController@mine exception: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while fetching your products.');
+        }
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
