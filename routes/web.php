@@ -18,6 +18,9 @@ Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
+// Handle contact form submissions
+use App\Http\Controllers\ContactController;
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 // Resource routes for the shop
 
 Route::get('/dashboard', [CartController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');

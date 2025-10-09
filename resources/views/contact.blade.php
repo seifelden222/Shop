@@ -29,7 +29,7 @@
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
-                    <form action="#" method="POST">
+                    <form action="{{ route('contact.store') }}" method="POST">
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -62,7 +62,7 @@
                             </div>
 
                             <div class="col-12 text-end">
-                                <button class="btn btn-primary px-4 py-2">Send Message</button>
+                                <button type="submit" class="btn btn-primary px-4 py-2">Send Message</button>
                             </div>
                         </div>
                     </form>

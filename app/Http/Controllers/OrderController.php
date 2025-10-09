@@ -22,7 +22,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
+        $user = auth()->user(); 
         $query = Order::with('orderItems.product');
         if ($user && ! $user->isAdmin()) {
             $query->where('user_id', $user->id);
