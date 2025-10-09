@@ -14,11 +14,15 @@
         <div class="row">
           <div class="col-12 mb-3">
             <h2 class="text-center">All Brands</h2>
+            @if(Auth::check() && Auth::user()->role === 'admin')
+
             <div class="text-center">
               <a href="{{ route('brands.create') }}" class="btn btn-primary">
+
                 <i class="bi bi-plus-circle"></i> Add New Brand
               </a>
             </div>
+            @endif
           </div>
 
           @forelse($brands as $brand)
@@ -57,32 +61,24 @@
                     {{ $brand->products_count ?? 0 }} Products
                   </div>
                   <div>
-                    @auth
-                      @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('brands.show', $brand) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('brands.show', $brand) }}" class="btn btn-outline-info btn-sm">
                           <i class="bi bi-eye"></i> View
                         </a>
-                        <a href="{{ route('brands.edit', $brand) }}" class="btn btn-outline-warning btn-sm ms-1">
-                          <i class="bi bi-pencil"></i> Edit
-                        </a>
-                        <form method="POST" action="{{ route('brands.destroy', $brand) }}" class="d-inline">
-                          @csrf
-                          @method('DELETE')
-                          <button type="submit" class="btn btn-outline-danger btn-sm ms-1" 
-                                  onclick="return confirm('Are you sure you want to delete this brand?')">
-                            <i class="bi bi-trash"></i> Delete
-                          </button>
-                        </form>
-                      @else
-                        <a href="{{ route('brands.show', $brand) }}" class="btn btn-outline-info btn-sm">
-                          <i class="bi bi-eye"></i> Explore
-                        </a>
-                      @endif
-                    @else
-                      <a href="{{ route('brands.show', $brand) }}" class="btn btn-outline-info btn-sm">
-                        <i class="bi bi-eye"></i> View
-                      </a>
-                    @endauth
+                        @can('update', $brand)
+                          <a href="{{ route('brands.edit', $brand) }}" class="btn btn-outline-warning btn-sm ms-1">
+                            <i class="bi bi-pencil"></i> Edit
+                          </a>
+                        @endcan
+                        @can('delete', $brand)
+                          <form method="POST" action="{{ route('brands.destroy', $brand) }}" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger btn-sm ms-1" 
+                                    onclick="return confirm('Are you sure you want to delete this brand?')">
+                              <i class="bi bi-trash"></i> Delete
+                            </button>
+                          </form>
+                        @endcan
                   </div>
                 </div>
               </div>

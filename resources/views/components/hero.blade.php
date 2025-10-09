@@ -5,7 +5,7 @@
   'primaryLink' => null,
   'secondaryLabel' => null,
   'secondaryLink' => null,
-  'image' => '/images/istockphoto-1428709516-612x612.jpg'
+  'image' => '/images/istockphoto-1428709516-612x612.jpg',
 ])
 
 <section class="py-5 bg-white">
@@ -177,8 +177,18 @@
         </style>
         @endpush
 
+        @php
+          $showPrimary = true;
+          if (Auth::check() && Auth::user()->role === 'admin') {
+              $showPrimary = false; // do not show primary button to admins by default
+          }
+          // fallback labels
+          $primaryLabel = $primaryLabel ?? 'Get Started';
+          $secondaryLabel = $secondaryLabel ?? 'Learn more';
+        @endphp
+
         <div class="d-flex gap-2">
-          @if($primaryLink && $primaryLabel)
+          @if($showPrimary && $primaryLink && $primaryLabel)
             <a href="{{ $primaryLink }}" class="btn btn-primary btn-lg">{{ $primaryLabel }}</a>
           @endif
           @if($secondaryLink && $secondaryLabel)

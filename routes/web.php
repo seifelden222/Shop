@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
@@ -18,12 +19,11 @@ Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
-// Handle contact form submissions
-use App\Http\Controllers\ContactController;
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+// Handle contact form submissions (rate limited to prevent abuse)
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:10,1')->name('contact.store');
 // Resource routes for the shop
 
-Route::get('/dashboard', [CartController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [CartController::class, 'index'])->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

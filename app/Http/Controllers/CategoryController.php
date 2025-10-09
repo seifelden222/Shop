@@ -18,10 +18,6 @@ class CategoryController extends Controller
         try {
 
             $query = Category::orderBy('created_at', 'desc');
-            $user = Auth::user();
-            if ($user && ! $user->isAdmin()) {
-                $query->where('user_id', $user->id);
-            }
             $categories = $query->paginate(10);
             return view('categories.index', compact('categories'));
         } catch (\Exception $e) {

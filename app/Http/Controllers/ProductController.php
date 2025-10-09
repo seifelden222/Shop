@@ -18,10 +18,6 @@ class ProductController extends Controller
     {
         try{
             $query = Product::orderBy('created_at', 'desc');
-            $user = Auth::user();
-            if ($user && ! $user->isAdmin()) {
-                $query->where('user_id', $user->id);
-            }
             $products = $query->paginate(15)->withQueryString();
             return view('products.index', compact('products'));
         } catch (\Exception $e) {

@@ -57,7 +57,7 @@
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th width="80">#</th>
+                                  
                                     <th>Order Details</th>
                                     <th>Customer</th>
                                     <th width="120">Total</th>
@@ -69,12 +69,10 @@
                             <tbody>
                                 @foreach($orders as $order)
                                 <tr>
-                                    <td class="align-middle">
-                                        <span class="text-muted">#{{ $order->id }}</span>
-                                    </td>
+                                 
                                     <td class="align-middle">
                                         <div>
-                                            <strong>{{ Str::limit($order->order_number, 8) }}</strong>
+                                            <strong>{{ Str::limit($order->order_number) }}</strong>
                                             <br>
                                             <small class="text-muted">{{ $order->orderItems->count() }} items</small>
                                         </div>

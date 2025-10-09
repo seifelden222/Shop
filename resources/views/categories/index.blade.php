@@ -54,32 +54,24 @@
                 {{ $category->products_count ?? 0 }} Products
               </div>
               <div>
-                @auth
-                  @if(auth()->user()->role === 'admin')
-                    <a href="{{ route('categories.show', $category) }}" class="btn btn-info btn-sm">
-                      <i class="bi bi-eye"></i> View
-                    </a>
-                    <a href="{{ route('categories.edit', $category) }}" class="btn btn-outline-warning btn-sm ms-1">
-                      <i class="bi bi-pencil"></i> Edit
-                    </a>
-                    <form method="POST" action="{{ route('categories.destroy', $category) }}" class="d-inline">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn btn-outline-danger btn-sm ms-1"
-                        onclick="return confirm('Are you sure you want to delete this category?')">
-                        <i class="bi bi-trash"></i> Delete
-                      </button>
-                    </form>
-                  @else
-                    <a href="{{ route('categories.show', $category) }}" class="btn btn-outline-info btn-sm">
-                      <i class="bi bi-eye"></i> Explore
-                    </a>
-                  @endif
-                @else
-                  <a href="{{ route('categories.show', $category) }}" class="btn btn-outline-info btn-sm">
-                    <i class="bi bi-eye"></i> View
+                <a href="{{ route('categories.show', $category) }}" class="btn btn-outline-info btn-sm">
+                  <i class="bi bi-eye"></i> View
+                </a>
+                @can('update', $category)
+                  <a href="{{ route('categories.edit', $category) }}" class="btn btn-outline-warning btn-sm ms-1">
+                    <i class="bi bi-pencil"></i> Edit
                   </a>
-                @endauth
+                @endcan
+                @can('delete', $category)
+                  <form method="POST" action="{{ route('categories.destroy', $category) }}" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-outline-danger btn-sm ms-1"
+                      onclick="return confirm('Are you sure you want to delete this category?')">
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                  </form>
+                @endcan
               </div>
             </div>
           </div>

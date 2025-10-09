@@ -17,6 +17,8 @@ return new class extends Migration
             // Brand relationship - just the column, no foreign key constraint
             $table->unsignedBigInteger('brand_id')->nullable();
             $table->string('brand')->nullable(); // Keep brand name for backward compatibility
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2);

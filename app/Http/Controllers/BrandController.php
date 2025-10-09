@@ -19,10 +19,6 @@ class BrandController extends Controller
         try {
 
             $query = Brand::orderBy('created_at', 'desc');
-            $user = Auth::user();
-            if ($user && ! $user->isAdmin()) {
-                $query->where('user_id', $user->id);
-            }
             $brands = $query->paginate(16)->withQueryString();
             return view('brands.index', compact('brands'));
         } catch (\Exception $e) {

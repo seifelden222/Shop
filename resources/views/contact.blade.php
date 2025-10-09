@@ -74,8 +74,8 @@
             <div class="card contact-card shadow-sm p-3 hover-shadow">
                 <div class="card-body">
                     <h5 class="mb-3">Contact details</h5>
-                    <p class="mb-2"><i class="bi bi-telephone-fill me-2 text-primary"></i> Phone: <a href="tel:+201234567890">+20 123 456 7890</a></p>
-                    <p class="mb-2"><i class="bi bi-envelope-fill me-2 text-primary"></i> Email: <a href="mailto:{{ config('site.developer.email', 'you@example.com') }}">{{ config('site.developer.email', 'you@example.com') }}</a></p>
+                    <p class="mb-2"><i class="bi bi-telephone-fill me-2 text-primary"></i> Phone: <a href="tel:+201032484794">+20 103 248 474945</a></p>
+                    <p class="mb-2"><i class="bi bi-envelope-fill me-2 text-primary"></i> Email: seifeldenhamdy@gmail.com <a href="mailto:{{ config('site.developer.email', 'seifeldenhamdy@gmail.com') }}">{{ config('site.developer.email', 'seifeldenhamdy@gmail.com') }}</a></p>
                     <p class="mb-2"><i class="bi bi-geo-alt-fill me-2 text-primary"></i> Address: Cairo, Egypt</p>
 
                     <hr>
