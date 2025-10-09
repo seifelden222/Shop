@@ -1,52 +1,34 @@
 @extends('layouts.app')
 @section('content')
-<section class="hero">
-      <div class="container hero-content text-white">
-        <div class="row">
-          <div class="col-12 col-md-8">
-            <h2 class="display-6 fw-bold">
-              {{ $category->name }}
-            </h2>
-            <p class="text-white-50 mb-4">
-              {{ $category->description ?? 'No description available.' }}
-            </p>
-
-            <div class="d-flex gap-2">
-              <a href="{{ route('categories.index') }}" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-arrow-left"></i> Back to Categories
-              </a>
-              @auth
-                @if(auth()->user()->role === 'admin')
-                  <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning btn-lg">
-                    <i class="bi bi-pencil"></i> Edit Category
-                  </a>
-                @endif
-              @endauth
-            </div>
-          </div>
-        </div>
-      </div>
-</section>
+<!-- @include('components.hero', [
+  'title' => $category->name,
+  'subtitle' => $category->description ?? 'No description available.',
+  'primaryLabel' => 'Back to Categories',
+  'primaryLink' => route('categories.index'),
+  'secondaryLabel' => auth()->check() && auth()->user()->role === 'admin' ? 'Edit Category' : null,
+  'secondaryLink' => auth()->check() && auth()->user()->role === 'admin' ? route('categories.edit', $category) : null,
+]) -->
 
 <section aria-label="Category Details">
       <div class="container py-4">
         <div class="row">
           <div class="col-12 col-lg-4 mb-4">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm hover-shadow">
               <div class="card-header bg-info text-white">
                 <h5 class="mb-0"><i class="bi bi-info-circle"></i> Category Information</h5>
               </div>
               <div class="card-body">
-                @if($category->main_image)
+                @if($category->image && file_exists(storage_path('app/public/' . $category->image)))
                   <div class="text-center mb-3">
-                    <img src="{{ asset('storage/' . $category->main_image) }}" 
+                    <img src="{{ asset('storage/' . $category->image) }}"
                          alt="{{ $category->name }}"
                          class="img-fluid rounded"
-                         style="max-height: 300px;">
+                         style="max-height: 300px;" loading="lazy"
+                         onerror="this.src='https://via.placeholder.com/600x300/6c757d/ffffff?text={{ urlencode($category->name) }}'">
                   </div>
                 @else
                   <div class="text-center mb-3 p-4 bg-light rounded">
-                    <i class="bi bi-image fs-1 text-muted"></i>
+                    <img src="https://via.placeholder.com/600x300/6c757d/ffffff?text={{ urlencode($category->name) }}" alt="No image" class="img-fluid rounded">
                     <p class="text-muted mt-2">No image available</p>
                   </div>
                 @endif
@@ -93,17 +75,24 @@
                     @foreach($category->products as $product)
                     @if($product->status == "published" && $product->stock > 0)
                     <div class="col-12 col-md-6 col-lg-4 mb-3">
-                      <div class="card h-100">
-                        @if($product->main_image)
-                          <img src="{{ asset('storage/' . $product->main_image) }}" 
-                               alt="{{ $product->name }}"
-                               class="card-img-top"
-                               style="height: 150px; object-fit: cover;">
-                        @else
-                          <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
-                            <i class="bi bi-image text-muted"></i>
+                      <div class="card h-100 hover-shadow">
+                        <div class="position-relative">
+                          @if($product->main_image)
+                            <img src="{{ asset('storage/' . $product->main_image) }}" 
+                              alt="{{ $product->name }}"
+                              class="card-img-top"
+                              style="height: 150px; object-fit: cover;" loading="lazy">
+                          @else
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                              <i class="bi bi-image text-muted"></i>
+                            </div>
+                          @endif
+                          
+                          <!-- Favorite button - always visible -->
+                          <div class="position-absolute top-0 end-0 m-2" style="z-index: 15;">
+                            @include('components.favorite-button', ['productId' => $product->id])
                           </div>
-                        @endif
+                        </div>
                         
                         <div class="card-body d-flex flex-column">
                           <h6 class="card-title">{{ $product->name }}</h6>

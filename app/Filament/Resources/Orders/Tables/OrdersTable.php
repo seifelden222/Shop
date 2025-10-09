@@ -18,6 +18,9 @@ class OrdersTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
                 TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
@@ -49,8 +52,15 @@ class OrdersTable
                 TextColumn::make('total_price')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('status')
-                    ->badge(),
+                \Filament\Tables\Columns\SelectColumn::make('status')
+                    ->options([
+                        'processing' => 'Processing',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                        'refunded' => 'Refunded',
+                    ])
+                    ->label('Status')
+                    ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

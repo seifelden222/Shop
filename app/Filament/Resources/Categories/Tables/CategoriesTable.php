@@ -20,6 +20,9 @@ class CategoriesTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('slug')
@@ -27,6 +30,9 @@ class CategoriesTable
                 ImageColumn::make('image'),
                 IconColumn::make('is_active')
                     ->boolean(),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge(),
                 TextColumn::make('parent_id')
                     ->searchable(),
                 TextColumn::make('deleted_at')

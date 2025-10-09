@@ -1,35 +1,19 @@
 @extends('layouts.app')
 @section('content')
-<section class="hero">
-      <div class="container hero-content text-white">
-        <div class="row">
-          <div class="col-12 col-md-8">
-            <h2 class="display-6 fw-bold">
-              Create New Product
-            </h2>
-            <p class="text-white-50 mb-4">
-              Add a new product to your inventory.
-            </p>
-
-            <div class="d-flex gap-2">
-              <a href="{{ route('products.index') }}" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-arrow-left"></i> Back to Products
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-</section>
+<!-- @include('components.hero', [
+  'title' => 'Create New Product',
+  'subtitle' => 'Add a new product to your inventory.',
+  'primaryLabel' => 'Back to Products',
+  'primaryLink' => route('products.index'),
+]) -->
 
 <section aria-label="Create Product Form">
       <div class="container py-4">
         <div class="row justify-content-center">
           <div class="col-12 col-lg-8">
             <div class="card shadow-sm">
-              <div class="card-header bg-primary text-white">
-                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Product</h4>
-              </div>
-              <div class="card-body">
+              <div class="card-body p-4 p-md-5">
+                <h4 class="mb-3 fw-bold"><i class="bi bi-plus-circle text-primary me-2"></i>Create New Product</h4>
                 <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
                   @csrf
                   

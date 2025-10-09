@@ -1,12 +1,11 @@
 /* Import Bootstrap CSS */
-@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "bootstrap/dist/css/bootstrap.min.css";
 
 /* Custom styles for your Laravel Shop application */
 .hero {
-    background-image: url("Gemini_Generated_Image_1mwwa91mwwa91mww.png");
     background-size: cover;
     background-position: center;
-    min-height: 520px;
+    min-height: 430px;
     position: relative;
     display: flex;
     align-items: center;
@@ -15,7 +14,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.35);
+    /* background: rgba(0, 0, 0, 0.35); */
 }
 .hero .hero-content {
     position: relative;
@@ -27,14 +26,79 @@
 .category-item {
     max-width: 180px;
 }
-.card{
+.card {
     border-radius: 15px;
     transition: all 0.3s ease;
 }
-.card:hover{
+.card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+
+/* Small reusable hover shadow helper used across views */
+.hover-shadow {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.hover-shadow:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+/* Cart specific styles */
+.cart-item { padding: 12px 16px; }
+.cart-img { height: 80px; width: 80px; object-fit: cover; border-radius: 10px; }
+.cart-qty { display:flex; align-items:center; gap:8px; justify-content:center; }
+.qty-input { width:64px; text-align:center; border-radius:8px; }
+.qty-btn { min-width:36px; }
+
+.order-summary .btn { border-radius: 8px; }
+.order-summary .btn-primary { box-shadow: 0 6px 18px rgba(0,123,255,0.12); }
+
+
+/* Footer styles (RTL-friendly) */
+.site-footer {
+    background: #0f1724; /* dark navy */
+    color: rgba(255, 255, 255, 0.92);
+    padding: 48px 0;
+    font-size: 0.95rem;
+}
+.site-footer a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+}
+.site-footer a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+.site-footer .footer-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+.site-footer .social-icon {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+    color: #fff;
+}
+.site-footer .small-muted {
+    color: rgba(255, 255, 255, 0.6);
+}
+@media (max-width: 575.98px) {
+    .site-footer {
+        padding: 32px 0;
+        text-align: center;
+    }
+    .site-footer .social-icon {
+        margin: 0.25rem;
+    }
+}
+
 
 /* You can keep Tailwind if you want to use both frameworks */
 @tailwind base;

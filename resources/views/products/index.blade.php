@@ -1,66 +1,62 @@
 @extends('layouts.app')
 @section('content')
-<section class="hero">
-  <div class="container hero-content text-white">
-    <div class="row">
-      <div class="col-12 col-md-8">
-        <h2 class="display-6 fw-bold">
-          All Products
-        </h2>
-        <p class="text-white-50 mb-4">
-          Manage your product inventory and listings.
-        </p>
-
-        <form class="mb-4" role="search" aria-label="Product search">
-          <div class="input-group input-group-lg shadow-sm">
-            <input
-              type="search"
-              class="form-control rounded-pill"
-              placeholder="Search products..."
-              aria-label="Search" />
-            <button class="btn btn-primary rounded-pill ms-2" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
-        </form>
-
-        <div class="d-flex gap-2">
-          <a href="{{ route('products.create') }}" class="btn btn-success btn-lg">Add New Product</a>
-          <a href="{{ route('products.index') }}" class="btn btn-outline-light btn-lg">View All</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+@include('components.hero', [
+  'title' => 'All Products',
+  'subtitle' => 'Manage your product inventory and listings.',
+  //'primaryLabel' => 'Add New Product',
+  //'primaryLink' => route('products.create'),
+  'secondaryLabel' => 'View All',
+  'secondaryLink' => route('products.index'),
+])
 
 <section aria-label="Products List">
   <div class="container py-4">
     <div class="row">
       <div class="col-12 mb-3">
         <h2 class="text-center">Product Inventory</h2>
+          @if(Auth::check() && Auth::user()->role === 'admin')
         <div class="text-center">
           <a href="{{ route('products.create') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Add New Product
           </a>
         </div>
+        @endif
       </div>
 
       @forelse($products as $product)
       @if($product->status == "published" && $product->stock > 0)
       <div class="col-12 col-md-4 mb-4">
 
-        <div class="card h-100 shadow-sm">
-          @if($product->main_image)
-          <img
-            src="{{ asset('storage/' . $product->main_image) }}"
-            alt="{{ $product->name }}"
-            class="card-img-top"
-            style="height: 200px; object-fit: cover;" />
-          @else
-          <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-            <i class="bi bi-box-seam fs-1 text-muted"></i>
+        <div class="card h-100 shadow-sm hover-shadow">
+          <div class="position-relative">
+            @if($product->main_image)
+            <img
+              src="{{ asset('storage/' . $product->main_image) }}"
+              alt="{{ $product->name }}"
+              class="card-img-top"
+              style="height: 200px; object-fit: cover;" loading="lazy" />
+            @else
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+              <i class="bi bi-box-seam fs-1 text-muted"></i>
+            </div>
+            @endif
+
+            <div class="position-absolute top-0 end-0 m-2" style="z-index: 15;">
+              @auth
+                <form method="POST" action="{{ route('favorites.store') }}">
+                  @csrf
+                  <input type="hidden" name="product_id" value="{{ $product->id }}">
+                  <button type="submit" class="btn btn-sm btn-light rounded-circle shadow-lg border-2 border-danger" title="Add to favorites" style="width: 40px; height: 40px; background-color: white !important;">
+                    <i class="bi bi-heart-fill text-danger"></i>
+                  </button>
+                </form>
+              @else
+                <a href="{{ route('login') }}" class="btn btn-sm btn-light rounded-circle shadow-lg border-2 border-danger" title="Login to add to favorites" style="width: 40px; height: 40px; background-color: white !important; text-decoration: none;">
+                  <i class="bi bi-heart-fill text-danger"></i>
+                </a>
+              @endauth
+            </div>
           </div>
-          @endif
 
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ $product->name }}</h5>
@@ -83,40 +79,33 @@
                 ${{ number_format($product->price, 2) }}
               </div>
               <div>
-                @auth
-                  @if(auth()->user()->role === 'admin')
-                    <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm">
-                      <i class="bi bi-eye"></i> View
-                    </a>
-                    <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm ms-1">
-                      <i class="bi bi-pencil"></i> Edit
-                    </a>
-                    <form method="POST" action="{{ route('products.destroy', $product) }}" class="d-inline">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn btn-outline-danger btn-sm ms-1"
-                        onclick="return confirm('Are you sure you want to delete this product?')">
-                        <i class="bi bi-trash"></i> Delete
-                      </button>
-                    </form>
-                  @else
-                    <form class="d-inline" method="POST" action="{{ route('cart.quick-add') }}">
-                      @csrf
-                      <input type="hidden" name="quantity" value="1">
-                      <input type="hidden" name="product_id" value="{{ $product->id }}">
-                      <button type="submit" class="btn btn-success btn-sm">
-                        <i class="bi bi-cart-plus"></i> Add to Cart
-                      </button>
-                    </form>
-                    <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info btn-sm ms-1">
-                      <i class="bi bi-eye"></i> View
-                    </a>
-                  @endif
-                @else
-                  <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info btn-sm">
-                    <i class="bi bi-eye"></i> View
+                <a href="{{ route('products.show', $product) }}" class="btn btn-outline-info btn-sm">
+                  <i class="bi bi-eye"></i> View
+                </a>
+                @can('update', $product)
+                  <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm ms-1">
+                    <i class="bi bi-pencil"></i> Edit
                   </a>
-                    @endauth
+                @endcan
+                @can('delete', $product)
+                  <form method="POST" action="{{ route('products.destroy', $product) }}" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-outline-danger btn-sm ms-1"
+                      onclick="return confirm('Are you sure you want to delete this product?')">
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                  </form>
+                @elsecan('create', App\Models\Order::class)
+                  <form class="d-inline" method="POST" action="{{ route('cart.quick-add') }}">
+                    @csrf
+                    <input type="hidden" name="quantity" value="1">
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <button type="submit" class="btn btn-success btn-sm">
+          endi       <i class="bi bi-cart-plus"></i> Add to Cart
+                    </button>
+                  </form>
+                @endcan
               </div>
             </div>
           </div>

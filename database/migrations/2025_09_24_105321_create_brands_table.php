@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            // $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
-            // Removed circular foreign key dependency
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->text('description')->nullable();
             $table->string('slug')->nullable();
             $table->string('image')->nullable();

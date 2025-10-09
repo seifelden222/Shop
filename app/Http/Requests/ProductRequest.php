@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Product;
 
 class ProductRequest extends FormRequest
 {
@@ -11,7 +12,31 @@ class ProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        if (! $user) {
+            return false;
+        }
+
+        // Create
+        if ($this->isMethod('post')) {
+            return $user->can('create', Product::class);
+        }
+
+        // Update
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $routeModel = $this->route('product') ?? $this->route('products') ?? $this->route('id');
+            if ($routeModel instanceof Product) {
+                return $user->can('update', $routeModel);
+            }
+            if (is_numeric($routeModel) || is_string($routeModel)) {
+                $model = Product::find($routeModel);
+                return $model ? $user->can('update', $model) : false;
+            }
+            return false;
+        }
+
+        // Default deny
+        return false;
     }
 
     /**

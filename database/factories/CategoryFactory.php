@@ -16,10 +16,24 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = $this->faker;
+
+
+        if ($faker) {
+            $name = $faker->unique()->words(2, true) . ' ' . $faker->randomElement(['Store', 'Shop', 'Market', 'Outlet', 'Hub']);
+            $description = $faker->paragraph(3);
+            $slug = $faker->unique()->slug();
+        } else {
+            $unique = substr(sha1((string) mt_rand() . microtime(true)), 0, 6);
+            $name = 'Category ' . $unique;
+            $description = 'Description for ' . $name;
+            $slug = 'category-' . $unique;
+        }
+
         return [
-            'name' => $this->faker->unique()->words(2, true) . ' ' . $this->faker->randomElement(['Store', 'Shop', 'Market', 'Outlet', 'Hub']),
-            'description' => $this->faker->paragraph(3),
-            'slug' => $this->faker->unique()->slug(),
+            'name' => $name,
+            'description' => $description,
+            'slug' => $slug,
             'image' => null, // We'll handle images separately if needed
             'is_active' => true,
             'created_at' => now(),

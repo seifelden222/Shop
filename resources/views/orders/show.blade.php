@@ -37,7 +37,7 @@
     <div class="row">
         <div class="col-lg-8">
             <!-- Customer Information -->
-            <div class="card mb-4">
+            <div class="card mb-4 hover-shadow">
                 <div class="card-header bg-light">
                     <h5 class="mb-0"><i class="bi bi-person-lines-fill"></i> Customer & Shipping Information</h5>
                 </div>
@@ -70,7 +70,7 @@
             </div>
 
             <!-- Order Items -->
-            <div class="card">
+            <div class="card hover-shadow">
                 <div class="card-header bg-light">
                     <h5 class="mb-0"><i class="bi bi-bag-check"></i> Order Items ({{ $order->orderItems->count() }} items)</h5>
                 </div>
@@ -91,7 +91,7 @@
                                     <td class="py-3">
                                         <div class="d-flex align-items-center">
                                             @if(optional($item->product)->main_image)
-                                                <img src="{{ asset('storage/' . $item->product->main_image) }}" alt="{{ $item->product_name }}" class="me-3 rounded border" style="width:60px;height:60px;object-fit:cover;">
+                                                <img src="{{ asset('storage/' . $item->product->main_image) }}" alt="{{ $item->product_name }}" class="me-3 rounded border" style="width:60px;height:60px;object-fit:cover;" loading="lazy">
                                             @else
                                                 <div class="me-3 bg-light rounded border d-flex align-items-center justify-content-center" style="width:60px;height:60px;">
                                                     <i class="bi bi-image text-muted"></i>
@@ -121,7 +121,7 @@
 
         <div class="col-lg-4">
             <!-- Order Summary -->
-            <div class="card mb-4">
+            <div class="card mb-4 hover-shadow">
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0"><i class="bi bi-calculator"></i> Order Summary</h5>
                 </div>
@@ -171,7 +171,7 @@
             </div>
 
             <!-- Order Details -->
-            <div class="card">
+            <div class="card hover-shadow">
                 <div class="card-header bg-light">
                     <h6 class="mb-0"><i class="bi bi-info-circle"></i> Order Information</h6>
                 </div>

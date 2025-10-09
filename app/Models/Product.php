@@ -10,6 +10,7 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
+        'user_id',
         'category_id',
         'brand_id', // Added brand_id
         'name',
@@ -34,10 +35,7 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    /**
-     * Get the brand that this product belongs to.
-     */
-    // Backwards-compatible brand relationship expected by resources
+
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');

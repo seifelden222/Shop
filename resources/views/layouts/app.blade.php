@@ -16,6 +16,17 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Inline override: ensure hero uses the public/images file so the
+             banner shows immediately even when build assets point elsewhere -->
+        <style>
+            /* Highest priority override to use the public/images path */
+            .hero {
+                background-image: url('/images/istockphoto-1428709516-612x612.jpg') ;
+            }
+
+           
+        </style>
     </head>
     <body>
         <div class="min-vh-100 bg-light">
@@ -25,7 +36,10 @@
                 @yield('content')
             </main>
         </div>
+        @include('layouts.footer')
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+            {{-- Render view-pushed scripts (e.g. AJAX search script pushed from components) --}}
+            @stack('scripts')
     </body>
 </html>

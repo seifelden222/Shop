@@ -18,17 +18,22 @@ class CartsTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
                 TextColumn::make('order_id')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('product_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('product_name')
+                TextColumn::make('product.name')
+                    ->label('Product')
                     ->searchable(),
+                TextColumn::make('user.name')
+                    ->label('User')
+                    ->searchable(),
+                \Filament\Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->toggleable(),
                 TextColumn::make('quantity')
                     ->numeric()
                     ->sortable(),

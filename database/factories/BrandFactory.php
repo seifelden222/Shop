@@ -16,10 +16,25 @@ class BrandFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = $this->faker;
+
+  
+
+        if ($faker) {
+            $name = $faker->unique()->company() . ' ' . $faker->randomElement(['Inc', 'Corp', 'Ltd', 'Co', 'Group']);
+            $description = $faker->paragraph(2);
+            $slug = $faker->unique()->slug();
+        } else {
+            $unique = substr(sha1((string) mt_rand() . microtime(true)), 0, 6);
+            $name = 'Brand ' . $unique;
+            $description = 'Brand description for ' . $name;
+            $slug = 'brand-' . $unique;
+        }
+
         return [
-            'name' => $this->faker->unique()->company() . ' ' . $this->faker->randomElement(['Inc', 'Corp', 'Ltd', 'Co', 'Group']),
-            'description' => $this->faker->paragraph(2),
-            'slug' => $this->faker->unique()->slug(),
+            'name' => $name,
+            'description' => $description,
+            'slug' => $slug,
             'image' => null,
             'is_active' => true,
             'created_at' => now(),

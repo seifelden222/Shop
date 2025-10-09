@@ -43,10 +43,15 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        // Send verification email immediately (in case EventServiceProvider doesn't register the default listener)
+        if (method_exists($user, 'sendEmailVerificationNotification')) {
+            $user->sendEmailVerificationNotification();
+        }
+
         Auth::login($user);
 
         // return redirect(route('welcome', absolute: false));
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('welcome', absolute: false));
     }
 }

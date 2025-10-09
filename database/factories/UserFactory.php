@@ -23,9 +23,23 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        // Prefer the framework-provided faker. If it's not available (dev deps
+        // not installed), fall back to a simple unique string generator so
+        // seeds can still run in CI or production-like environments.
+        $faker = $this->faker;
+
+        if ($faker) {
+            $name = $faker->name();
+            $email = $faker->unique()->safeEmail();
+        } else {
+            $unique = substr(sha1((string) mt_rand() . microtime(true)), 0, 8);
+            $name = 'User ' . $unique;
+            $email = 'user+' . $unique . '@example.com';
+        }
+
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $name,
+            'email' => $email,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),

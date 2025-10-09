@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Category;
 
 class CategorieRequest extends FormRequest
 {
@@ -11,7 +12,28 @@ class CategorieRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        if (! $user) {
+            return false;
+        }
+
+        if ($this->isMethod('post')) {
+            return $user->can('create', Category::class);
+        }
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $routeModel = $this->route('category') ?? $this->route('categories') ?? $this->route('id');
+            if ($routeModel instanceof Category) {
+                return $user->can('update', $routeModel);
+            }
+            if (is_numeric($routeModel) || is_string($routeModel)) {
+                $model = Category::find($routeModel);
+                return $model ? $user->can('update', $model) : false;
+            }
+            return false;
+        }
+
+        return false;
     }
 
     /**
